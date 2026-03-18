@@ -334,13 +334,8 @@
     <footer class="mt-auto border-t border-gray-200 bg-white">
         <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
             <p>© כל הזכויות שמורות לפורום הבית היהודי</p>
-            <div class="mt-4 md:mt-0 flex gap-4">
-                <a href="#" class="hover:text-[#d4af37]">תקנון האתר</a>
-                <a href="mailto:jewish1home@gmail.com" class="hover:text-[#d4af37]">צור קשר</a>
-                <a href="tel:02-313-16-15" class="hover:text-[#d4af37] border-r border-gray-300 pr-4">טלפון: 02-313-16-15</a>
-            </div>
             <p class="mt-4 md:mt-0 text-[11px] uppercase tracking-widest font-medium">
-                נבנה על ידי <span class="text-gray-700 font-bold">לב טוב</span>
+                נבנה על ידי <a href="mailto:myylbwt@gmail.com" class="text-gray-700 font-bold hover:text-[#d4af37] transition">לב טוב</a>
             </p>
         </div>
     </footer>
@@ -417,7 +412,8 @@
         const ARTICLES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1100608744&single=true&output=csv'; 
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // שינוי בשורה הבאה: ייבוא של פונקציית signInWithRedirect
+        import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const GITHUB_FIREBASE_CONFIG = {
@@ -584,6 +580,9 @@
             }
 
             if(tabId === 'history') updateHistoryView();
+            
+            // חזרה אוטומטית לראש הדף במעבר בין דפים
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function toggleLogin() {
@@ -596,7 +595,8 @@
             } else {
                 try {
                     const provider = new GoogleAuthProvider();
-                    await signInWithPopup(auth, provider);
+                    // מעבר לשיטת הפניה (Redirect) במקום חלון קופץ שעלול להיחסם
+                    await signInWithRedirect(auth, provider);
                 } catch (e) {
                     console.error("Login error", e);
                     // הבלש החכם שמזהה במדויק את הבעיה של הדומיין
