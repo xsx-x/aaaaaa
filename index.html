@@ -175,6 +175,14 @@
                     </div>
                 </div>
                 <div class="w-full lg:w-3/4">
+                    <!-- תיבת החיפוש החדשה של לוח השיעורים -->
+                    <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <div class="relative">
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">🔍</span>
+                            <input type="text" id="scheduleLecturerSearch" oninput="handleScheduleSearch()" placeholder="חיפוש מרצה / רב בלוח השיעורים..." class="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] outline-none bg-gray-50 transition text-slate-800">
+                        </div>
+                    </div>
+
                     <div id="scheduleContainer" class="space-y-8">
                         <div class="text-center py-10 text-gray-500">טוען את לוח השיעורים...</div>
                     </div>
@@ -344,17 +352,18 @@
         </div>
     </div>
 
-    <div id="videoModal" class="modal">
-        <div class="bg-slate-900 rounded-xl p-2 w-full max-w-4xl mx-4 relative">
-            <div class="flex justify-between items-center bg-slate-800 p-3 rounded-t-lg mb-2">
-                <h3 id="videoModalTitle" class="text-white font-bold text-sm truncate pr-2">צפייה בשיעור</h3>
-                <button onclick="closeModal('videoModal')" class="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-bold">סגור X</button>
+    <div id="videoModal" class="modal z-[60]">
+        <div class="bg-slate-900 rounded-xl w-full max-w-4xl mx-4 relative overflow-hidden flex flex-col max-h-[95vh]">
+            <div class="flex justify-between items-center bg-slate-800 p-4 border-b border-slate-700">
+                <h3 id="videoModalTitle" class="text-white font-bold text-lg truncate pr-2">צפייה בשיעור</h3>
+                <button onclick="closeModal('videoModal')" class="text-slate-300 hover:text-white bg-slate-700 hover:bg-red-500 px-3 py-1 rounded transition text-sm font-bold">סגור ✕</button>
             </div>
-            <div class="aspect-video bg-black rounded w-full flex items-center justify-center text-gray-500 border border-slate-700">
-                <iframe id="videoIframe" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
+            
+            <div class="aspect-video w-full bg-black relative flex-grow min-h-[300px]">
+                <iframe id="videoIframe" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
             </div>
-            <div class="p-3 text-center">
-                <a id="driveBackupLink" href="#" target="_blank" class="text-blue-400 text-sm hover:underline">לא עובד? לחץ כאן למעבר לדרייב</a>
+            <div class="p-3 bg-slate-800 text-center flex justify-center gap-4 border-t border-slate-700">
+                <a id="driveBackupLink" href="#" target="_blank" class="text-slate-400 text-sm hover:text-white transition flex items-center gap-1">☁️ פתח בחלון חדש (Drive)</a>
             </div>
         </div>
     </div>
@@ -401,43 +410,33 @@
         // --- קישורי הנתונים מ-Google Sheets ---
         const EXPLORER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=0&single=true&output=csv';
         const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1693315274&single=true&output=csv';
-        
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // משימה בשבילך: יש להחליף את ה-gid בקישור הבא כדי שיצביע לגיליון 'מאמרים'
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const ARTICLES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1100608744&single=true&output=csv'; 
+        const ARTICLES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=הכנס_את_המספר_כאן&single=true&output=csv'; 
         
         // --- ייבוא ספריות Firebase מ-CDN ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // משימה בשבילך: מלא את הפרטים של פרויקט ה-Firebase שלך כדי שהתחברות Google תעבוד ב-GitHub
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const GITHUB_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyDcMySKuq53A5E2I3jOBh9lOdfNCtDseXs",
-  authDomain: "forum-habait.firebaseapp.com",
-  projectId: "forum-habait",
-  storageBucket: "forum-habait.firebasestorage.app",
-  messagingSenderId: "944043917590",
-  appId: "1:944043917590:web:e53815c257280f3e1dd037"
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
         };
 
-        // הגדרת Firebase (תמיכה גם בסביבת הפיתוח הנוכחית וגם בגיטהאב)
         const isCanvas = typeof __firebase_config !== 'undefined';
         const firebaseConfig = isCanvas ? JSON.parse(__firebase_config) : GITHUB_FIREBASE_CONFIG;
         const defaultAppId = typeof __app_id !== 'undefined' ? __app_id : 'forum-habait-github';
         
         let app, auth, db;
         
-        // אתחול Firebase רק אם יש מפתח תקין (כדי למנוע קריסת האתר אם עוד לא הכנסת מפתחות)
         if (firebaseConfig && firebaseConfig.apiKey) {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
             
-            // אימות ראשוני חובה לפי נהלי הסביבה המאובטחת
             const initAuth = async () => {
                 try {
                     if (isCanvas) {
@@ -452,15 +451,15 @@
             initAuth();
         }
 
-        // משתנים גלובליים למצב האפליקציה
         window.fileSystem = { name: "ראשי", type: "folder", children: {} };
         window.lecturerSystem = { name: "מרצים", type: "folder", children: {} };
         window.currentPathArr = []; 
         window.currentViewMode = 'lecturers'; 
         window.allSearchableItems = []; 
         window.isLoggedIn = false;
-        window.isPremiumUser = false; // מדמה מסלול משתמש - ניתן לשנות במערכת הניהול בעתיד
+        window.isPremiumUser = false; 
         window.currentUser = null;
+        window.currentScheduleMonthFilter = 'all'; // משתנה גלובלי לסינון חודשים בלוח
         let unsubscribeHistory = null;
 
         function showMessage(msg) {
@@ -468,10 +467,8 @@
             openModal('messageModal');
         }
 
-        // ==================== מערכת אימות ומשתמשים (Auth & History) ====================
         if(auth) {
             onAuthStateChanged(auth, (user) => {
-                // אנו מחשיבים משתמש למחובר אמיתי אם הוא לא אנונימי (או אם אנחנו בתוך הסביבה הסגורה של המפתחים)
                 if (user && (!user.isAnonymous || isCanvas)) {
                     window.currentUser = user;
                     window.isLoggedIn = true;
@@ -496,13 +493,10 @@
         function setupHistoryListener(userId) {
             if (!db) return;
             if (unsubscribeHistory) unsubscribeHistory();
-            
             const historyColl = collection(db, 'artifacts', defaultAppId, 'users', userId, 'history');
             unsubscribeHistory = onSnapshot(historyColl, (snapshot) => {
                 const items = [];
                 snapshot.forEach(doc => items.push(doc.data()));
-                
-                // מיון לפי תאריך בזיכרון הלקוח (ללא שימוש ב-orderBy של Firebase)
                 items.sort((a, b) => b.timestamp - a.timestamp);
                 renderHistory(items);
             }, (error) => {
@@ -513,10 +507,8 @@
         async function saveToHistory(itemObj) {
             if (!window.isLoggedIn || !window.currentUser || !db) return;
             try {
-                // יצירת מזהה ייחודי למסמך על בסיס שם השיעור
                 const docId = btoa(unescape(encodeURIComponent(itemObj.name))).replace(/[+/=]/g, '').slice(0, 30);
                 const historyRef = doc(db, 'artifacts', defaultAppId, 'users', window.currentUser.uid, 'history', docId);
-                
                 await setDoc(historyRef, {
                     id: docId,
                     name: itemObj.name,
@@ -533,21 +525,16 @@
         function renderHistory(items) {
             const container = document.getElementById('historyContainer');
             container.innerHTML = '';
-            
             if (items.length === 0) {
                 container.innerHTML = '<div class="text-center py-10 text-gray-500 bg-white rounded-xl border border-gray-100 shadow-sm">עדיין לא צפית בשיעורים. ההיסטוריה שלך תופיע כאן.</div>';
                 return;
             }
-
             items.forEach(item => {
                 const dateStr = new Date(item.timestamp).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' });
                 let icon = "📄"; let iconColor = "text-gray-600"; let bgColor = "bg-gray-100";
                 let btnText = "המשך";
                 if(item.type === "וידאו") { icon = "🎥"; iconColor = "text-blue-600"; bgColor = "bg-blue-100"; btnText = "המשך צפייה"; }
                 if(item.type === "שמע") { icon = "🎧"; iconColor = "text-purple-600"; bgColor = "bg-purple-100"; btnText = "המשך האזנה"; }
-                
-                const isPremiumContent = false; // כרגע אנו לא שומרים את הסטטוס בהיסטוריה, אפשר להרחיב בעתיד
-                
                 container.innerHTML += `
                     <div onclick="handleFileClick('${item.link}', '${item.name.replace(/'/g, "\\'")}', false)" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between hover:border-purple-300 transition cursor-pointer gap-4">
                         <div class="flex items-center gap-4">
@@ -564,11 +551,9 @@
             });
         }
 
-        // ==================== UI פונקציות בסיסיות ====================
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap";
                 if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
@@ -611,29 +596,17 @@
             else switchTab(targetTab);
         }
 
-        // מונה צופים
-        setInterval(() => {
-            const base = 40;
-            const random = Math.floor(Math.random() * 15) - 5;
-            document.getElementById('viewersCount').innerText = base + random;
-        }, 5000);
-        document.getElementById('viewersCount').innerText = Math.floor(Math.random() * 15) + 35;
-
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
             if(id === 'videoModal') document.getElementById('videoIframe').src = ""; 
         }
-        function openMailingListModal() { showMessage("כאן יפתח בעתיד טופס הרשמה לתפוצה של גוגל פורמס"); }
 
         function handleFileClick(link, name, isPremiumContent, type = 'וידאו', lecturer = '') {
             if (isPremiumContent && !window.isPremiumUser) {
                 openModal('premiumModal');
             } else {
-                // שמירה להיסטוריה
                 saveToHistory({ name, type, link, lecturer });
-                
-                // פתיחת חלונית
                 let embedLink = link;
                 if(link.includes('drive.google.com/file/d/')) {
                     const fileId = link.split('/d/')[1].split('/')[0];
@@ -646,45 +619,14 @@
             }
         }
 
-        function openFeedback(name) {
-            document.getElementById('feedbackLessonName').innerText = "עבור השיעור: " + name;
-            openModal('feedbackModal');
-        }
-
-        setTimeout(() => {
-            if(!window.isLoggedIn) document.getElementById('newsletterPopup').classList.remove('translate-y-full', 'opacity-0');
-        }, 8000);
-        function closeNewsletterPopup() { document.getElementById('newsletterPopup').classList.add('translate-y-full', 'opacity-0'); }
-
-        // הפעלת מודאל המאמרים
         function openArticleModal(title, author, date, category, encodedContent) {
             document.getElementById('modalArticleTitle').innerText = title;
             document.getElementById('modalArticleAuthor').innerText = "✍️ " + author;
             document.getElementById('modalArticleDate').innerText = "📅 " + date;
             document.getElementById('modalArticleCategory').innerText = category;
-            
-            // מפענח את התוכן חזרה מטקסט מקודד
             const content = decodeURIComponent(encodedContent);
-            document.getElementById('modalArticleContent').innerText = content; // משתמש ב-innerText כדי לשמור על ירידות השורה הטבעיות
-            
+            document.getElementById('modalArticleContent').innerText = content; 
             openModal('articleModal');
-        }
-
-        // ==================== לוגיקת סייר הקבצים ====================
-        function showSkeletons() {
-            const grid = document.getElementById('explorerGrid');
-            grid.innerHTML = Array(9).fill().map(() => `<div class="bg-white rounded-xl border border-gray-100 p-5 h-48 flex flex-col items-center justify-center animate-pulse"><div class="w-16 h-16 bg-slate-200 rounded-full mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div><div class="h-3 bg-slate-200 rounded w-1/2"></div></div>`).join('');
-        }
-
-        function switchViewMode(mode) {
-            window.currentViewMode = mode;
-            window.currentPathArr = []; 
-            clearSearch(false);
-            
-            document.getElementById('btnViewFolders').className = mode === 'folders' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
-            document.getElementById('btnViewLecturers').className = mode === 'lecturers' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
-            
-            renderCurrentFolder();
         }
 
         async function fetchExplorerData() {
@@ -703,13 +645,10 @@
             window.allSearchableItems = [];
             let lecturersSet = new Set();
             const today = new Date();
-            
             document.getElementById('lecturerFilter').innerHTML = '<option value="">כל הרבנים והמרצים</option>';
-
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i] || !lines[i].trim()) continue;
                 const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                
                 const pathStr = row[0] ? row[0].replace(/"/g, '').trim() : '';
                 const fileName = row[1] ? row[1].replace(/"/g, '').trim() : '';
                 const type = row[2] ? row[2].replace(/"/g, '').trim() : '';
@@ -717,25 +656,20 @@
                 const access = row[4] ? row[4].replace(/"/g, '').trim() : 'פתוח';
                 const lecturer = row[5] ? row[5].replace(/"/g, '').trim() : '';
                 const creationDate = row[6] ? row[6].replace(/"/g, '').trim() : '';
-                
                 if(!pathStr || !fileName) continue;
                 if(lecturer) lecturersSet.add(lecturer);
-
                 let isNew = false;
                 if(creationDate) {
                     const fileDate = new Date(creationDate);
                     const diffDays = Math.ceil(Math.abs(today - fileDate) / (1000 * 60 * 60 * 24));
                     if(diffDays <= 14) isNew = true;
                 }
-
                 const fileObj = { name: fileName, type: type, link: link, access: access, path: pathStr, lecturer: lecturer, date: creationDate, isNew: isNew };
-                
                 const folders = pathStr.split('/');
                 let currentNode = window.fileSystem;
                 let currentPathBuild = [];
                 let startIndex = folders[0] === "ראשי" ? 1 : 0;
                 if(folders[0] === "ראשי") currentPathBuild.push("ראשי");
-
                 for (let j = startIndex; j < folders.length; j++) {
                     let folderName = folders[j];
                     currentPathBuild.push(folderName);
@@ -745,7 +679,6 @@
                     currentNode = currentNode.children[folderName];
                 }
                 currentNode.children[fileName] = fileObj;
-
                 if (lecturer) {
                     if (!window.lecturerSystem.children[lecturer]) {
                         window.lecturerSystem.children[lecturer] = { name: lecturer, type: "folder", pathArr: [lecturer], children: {} };
@@ -753,7 +686,6 @@
                     window.lecturerSystem.children[lecturer].children[fileName] = fileObj;
                 }
             }
-            
             function collectAllItems(node, collection) {
                 for (const key in node.children) {
                     const child = node.children[key];
@@ -762,41 +694,18 @@
                 }
             }
             collectAllItems(window.fileSystem, window.allSearchableItems);
-            
             Array.from(lecturersSet).sort().forEach(l => { document.getElementById('lecturerFilter').innerHTML += `<option value="${l}">${l}</option>`; });
             switchViewMode('lecturers');
-        }
-
-        function navigateTo(index) {
-            clearSearch(false);
-            if (index === -1) window.currentPathArr = []; else window.currentPathArr = window.currentPathArr.slice(0, index + 1);
-            renderCurrentFolder();
-        }
-
-        function jumpToFolderFromSearch(pathString) {
-            const pathArray = pathString.split('||');
-            if(pathArray[0] === "ראשי") { window.currentViewMode = 'folders'; pathArray.shift(); } 
-            else { window.currentViewMode = 'lecturers'; }
-
-            window.currentPathArr = pathArray;
-            document.getElementById('btnViewFolders').className = window.currentViewMode === 'folders' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
-            document.getElementById('btnViewLecturers').className = window.currentViewMode === 'lecturers' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
-
-            clearSearch(false);
-            renderCurrentFolder();
         }
 
         function renderCurrentFolder() {
             let baseSystem = window.currentViewMode === 'folders' ? window.fileSystem : window.lecturerSystem;
             let currentNode = baseSystem;
             for (let folder of window.currentPathArr) { if(currentNode.children[folder]) currentNode = currentNode.children[folder]; }
-            
             const breadcrumbsDiv = document.getElementById('breadcrumbsContainer');
             const homeText = window.currentViewMode === 'folders' ? "סייר התיקיות הראשי" : "כל הרבנים והמרצים";
             const homeIcon = window.currentViewMode === 'folders' ? "🏠" : "👥";
-            
             let breadcrumbsHTML = `<button onclick="navigateTo(-1)" class="hover:text-blue-600 font-bold bg-slate-100 px-3 py-1.5 rounded-lg flex items-center gap-1 border border-slate-200"><span class="text-lg">${homeIcon}</span> ${homeText}</button>`;
-            
             window.currentPathArr.forEach((folder, index) => {
                 breadcrumbsHTML += `<span class="text-gray-400 font-bold mx-1">/</span><button onclick="navigateTo(${index})" class="hover:text-blue-600 font-medium hover:bg-slate-50 px-2 py-1 rounded transition">${folder}</button>`;
             });
@@ -808,16 +717,13 @@
             const gridDiv = document.getElementById('explorerGrid');
             const showNewOnly = document.getElementById('newFilterToggle').checked;
             if (showNewOnly) { items = items.filter(item => item.isNew || item.type === 'folder'); }
-            
             gridDiv.innerHTML = '';
             if (items.length === 0) { gridDiv.innerHTML = '<div class="col-span-full py-16 text-center text-gray-400 font-medium text-lg">לא נמצאו פריטים תואמים.</div>'; return; }
-            
             items.sort((a, b) => {
                 if (a.type === "folder" && b.type !== "folder") return -1;
                 if (a.type !== "folder" && b.type === "folder") return 1;
                 return a.name.localeCompare(b.name);
             });
-
             items.forEach(item => {
                 if (item.type === "folder") {
                     const pathStr = item.pathArr ? item.pathArr.join('||') : item.name;
@@ -829,73 +735,30 @@
                     let icon = "📄"; let iconColor = "text-gray-500"; let bgColor = "bg-gray-50";
                     if(item.type === "וידאו") { icon = "🎥"; iconColor = "text-blue-600"; bgColor = "bg-blue-50"; }
                     if(item.type === "שמע") { icon = "🎧"; iconColor = "text-purple-600"; bgColor = "bg-purple-50"; }
-                    
                     const safeAccess = item.access || "";
                     const isPremium = safeAccess.includes('מנויים');
                     const badgeClass = isPremium ? "bg-amber-100 text-amber-800 border-amber-200" : "bg-green-100 text-green-800 border-green-200";
                     const safeName = item.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                     const safeLecturer = (item.lecturer || '').replace(/'/g, "\\'");
-                    
                     gridDiv.innerHTML += `
                     <div class="bg-white rounded-xl border border-gray-200 flex flex-col relative h-full hover:shadow-md transition">
                         <div class="h-2 w-full rounded-t-xl ${isPremium ? 'bg-[#0f172a]' : 'bg-[#d4af37]'}"></div>
                         <div class="absolute top-3 right-3 border ${badgeClass} text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">${isPremium ? "🔒 מנויים" : "🔓 פתוח"}</div>
-                        
                         <div class="p-5 flex flex-col items-center flex-grow text-center mt-2">
                             <div class="w-14 h-14 rounded-full ${bgColor} flex items-center justify-center mb-3 shadow-sm"><span class="text-2xl ${iconColor}">${icon}</span></div>
                             <h3 class="font-bold text-slate-800 text-sm mb-1 line-clamp-2">${item.name}</h3>
                             <p class="text-xs text-gray-500 mb-4">${item.lecturer || ''}</p>
                         </div>
-                        
                         <div class="bg-gray-50 p-3 border-t border-gray-100 rounded-b-xl flex flex-col gap-2">
                             <div class="flex gap-2">
                                 <button onclick="handleFileClick('${item.link}', '${safeName}', ${isPremium}, '${item.type}', '${safeLecturer}')" class="flex-1 bg-[#0f172a] hover:bg-slate-800 text-white text-xs font-bold py-2 rounded transition flex items-center justify-center gap-1">▶️ צפייה</button>
                                 <a href="${item.link}" target="_blank" onclick="saveToHistory({name:'${safeName}', link:'${item.link}', type:'${item.type}', lecturer:'${safeLecturer}'})" class="flex-1 bg-white border border-gray-300 hover:bg-gray-100 text-slate-700 text-xs font-bold py-2 rounded transition text-center flex items-center justify-center gap-1">☁️ דרייב</a>
                             </div>
-                            <button onclick="openFeedback('${safeName}')" class="w-full text-xs text-gray-500 hover:text-[#d4af37] transition font-medium">✉️ שלח משוב לצוות</button>
                         </div>
                     </div>`;
                 }
             });
         }
-
-        function handleSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            const selectedLecturer = document.getElementById('lecturerFilter').value;
-            const showNewOnly = document.getElementById('newFilterToggle').checked;
-            const breadcrumbs = document.getElementById('breadcrumbsContainer');
-            const searchHeader = document.getElementById('searchResultsHeader');
-
-            if (searchTerm === "" && selectedLecturer === "" && !showNewOnly) {
-                breadcrumbs.classList.remove('hidden'); searchHeader.classList.add('hidden');
-                renderCurrentFolder(); return;
-            }
-            breadcrumbs.classList.add('hidden'); searchHeader.classList.remove('hidden');
-
-            const results = window.allSearchableItems.filter(item => {
-                const safePath = item.path || "";
-                const searchString = item.type === "folder" ? item.name : (item.name + " " + safePath);
-                const matchName = searchString.toLowerCase().includes(searchTerm);
-                const matchLecturer = selectedLecturer === "" || (item.lecturer && item.lecturer === selectedLecturer);
-                const matchNew = !showNewOnly || (item.isNew && item.type !== 'folder');
-                return matchName && matchLecturer && matchNew;
-            });
-            document.getElementById('searchCount').innerText = `${results.length} תוצאות נמצאו`;
-            drawGrid(results);
-        }
-
-        function clearSearch(render = true) {
-            document.getElementById('searchInput').value = "";
-            document.getElementById('lecturerFilter').value = "";
-            document.getElementById('newFilterToggle').checked = false;
-            document.getElementById('breadcrumbsContainer').classList.remove('hidden');
-            document.getElementById('searchResultsHeader').classList.add('hidden');
-            if(render) renderCurrentFolder();
-        }
-
-        document.getElementById('searchInput').addEventListener('input', handleSearch);
-        document.getElementById('lecturerFilter').addEventListener('change', handleSearch);
-        document.getElementById('newFilterToggle').addEventListener('change', handleSearch);
 
         // ==================== לוגיקת לוח השיעורים ====================
         async function fetchScheduleData() {
@@ -911,46 +774,42 @@
             const lines = csvText.split('\n');
             const groupedSchedule = {};
             const monthsSet = new Set(); 
-
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i] || !lines[i].trim()) continue;
                 const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                
                 let rawDate = row[0] ? row[0].replace(/"/g, '').trim() : '';
                 const time = row[1] ? row[1].replace(/"/g, '').trim() : '';
                 const lecturer = row[2] ? row[2].replace(/"/g, '').trim() : '';
                 const topic = row[3] ? row[3].replace(/"/g, '').trim() : '';
                 const audience = row[4] ? row[4].replace(/"/g, '').trim() : '';
+                const access = row[5] ? row[5].replace(/"/g, '').trim() : 'פתוח'; // קריאת הסטטוס מעמודה F בגוגל שיטס
                 
                 if(!rawDate) continue;
-
                 let normalizedDateKey = rawDate.replace(/'/g, '').replace(/"/g, '').replace(/\s+/g, ' ').trim();
-                
                 let extractedMonth = "כללי";
                 const words = normalizedDateKey.split(' ');
                 if(words.length >= 2) { extractedMonth = words[1]; } 
                 else if (normalizedDateKey.includes('/')) { extractedMonth = normalizedDateKey.split('/')[1]; }
                 monthsSet.add(extractedMonth);
-
                 if(!groupedSchedule[normalizedDateKey]) { groupedSchedule[normalizedDateKey] = { displayName: rawDate, month: extractedMonth, events: [] }; }
-                groupedSchedule[normalizedDateKey].events.push({ time, lecturer, topic, audience });
+                groupedSchedule[normalizedDateKey].events.push({ time, lecturer, topic, audience, access });
             }
-
             const monthFilterContainer = document.getElementById('monthFilterContainer');
             monthFilterContainer.innerHTML = `<button onclick="filterSchedule('all')" class="w-full text-right px-3 py-2 rounded-lg bg-slate-100 text-slate-800 font-bold hover:bg-slate-200 transition text-sm">הכל</button>`;
-            
             Array.from(monthsSet).forEach(month => {
                 if(month !== "כללי" && month.length > 1) {
                     monthFilterContainer.innerHTML += `<button onclick="filterSchedule('${month}')" class="w-full text-right px-3 py-2 rounded-lg text-gray-600 hover:bg-slate-50 transition text-sm">חודש ${month}</button>`;
                 }
             });
-
             window.allScheduleData = groupedSchedule; 
             renderScheduleCards('all');
         }
 
         function filterSchedule(monthFilter) {
-            renderScheduleCards(monthFilter);
+            window.currentScheduleMonthFilter = monthFilter;
+            const searchTerm = document.getElementById('scheduleLecturerSearch').value;
+            renderScheduleCards(monthFilter, searchTerm);
+            
             const buttons = document.getElementById('monthFilterContainer').querySelectorAll('button');
             buttons.forEach(b => {
                 b.className = "w-full text-right px-3 py-2 rounded-lg text-gray-600 hover:bg-slate-50 transition text-sm";
@@ -960,38 +819,76 @@
             });
         }
 
-        function renderScheduleCards(filterByMonth) {
+        function handleScheduleSearch() {
+            const searchTerm = document.getElementById('scheduleLecturerSearch').value;
+            renderScheduleCards(window.currentScheduleMonthFilter, searchTerm);
+        }
+
+        function renderScheduleCards(filterByMonth, searchTerm = '') {
             const container = document.getElementById('scheduleContainer');
             container.innerHTML = '';
-            
             let count = 0;
+            const term = searchTerm.toLowerCase().trim();
+
             for (const [dateKey, dayData] of Object.entries(window.allScheduleData)) {
                 if (filterByMonth !== 'all' && dayData.month !== filterByMonth) continue;
                 
-                count++;
-                let eventsHTML = '';
-                
+                let dayEventsHTML = '';
+                let hasVisibleEvents = false;
+
                 dayData.events.forEach(ev => {
+                    // סינון לפי שם המרצה בחיפוש
+                    if (term && (!ev.lecturer || !ev.lecturer.toLowerCase().includes(term))) {
+                        return; // מדלג על השיעור אם הוא לא מתאים לחיפוש
+                    }
+
                     const safeTopic = ev.topic || "";
                     if(safeTopic.includes('הפסקה')) {
-                        eventsHTML += `<div class="flex items-center gap-4 bg-slate-100 p-3 rounded-lg border border-slate-200 opacity-80"><span class="font-bold text-slate-500 min-w-[50px] text-left" dir="ltr">${ev.time}</span><div class="w-px h-6 bg-slate-300"></div><span class="font-bold text-slate-500 flex-grow text-center">☕ הפסקה</span></div>`;
+                        // מציג הפסקה רק אם אין חיפוש פעיל
+                        if(!term) {
+                            dayEventsHTML += `<div class="flex items-center gap-4 bg-slate-100 p-3 rounded-lg border border-slate-200 opacity-80"><span class="font-bold text-slate-500 min-w-[50px] text-left" dir="ltr">${ev.time}</span><div class="w-px h-6 bg-slate-300"></div><span class="font-bold text-slate-500 flex-grow text-center">☕ הפסקה</span></div>`;
+                            hasVisibleEvents = true;
+                        }
                     } else {
+                        hasVisibleEvents = true;
                         let badgeColor = "bg-gray-100 text-gray-800";
                         if(ev.audience === "זוגי") badgeColor = "bg-purple-100 text-purple-800 border-purple-200";
                         if(ev.audience === "נשים") badgeColor = "bg-pink-100 text-pink-800 border-pink-200";
                         if(ev.audience === "גברים") badgeColor = "bg-teal-100 text-teal-800 border-teal-200";
-                        eventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition"><span class="font-bold text-[#d4af37] min-w-[50px] text-xl" dir="ltr">${ev.time}</span><div class="hidden sm:block w-px h-10 bg-gray-200"></div><div class="flex-grow"><h4 class="font-bold text-lg text-slate-800">${ev.topic}</h4><p class="text-sm text-gray-500 flex items-center gap-1 mt-1">👤 ${ev.lecturer}</p></div><span class="border ${badgeColor} text-xs font-bold px-3 py-1 rounded-full text-center whitespace-nowrap self-start sm:self-center">${ev.audience}</span></div>`;
+                        
+                        // קביעת נראות לפי הרשאות (פרימיום לעומת פתוח)
+                        const isPremium = ev.access.includes('מנויים') || ev.access.includes('פרימיום') || ev.access.includes('שותפים');
+                        const accessBadgeClass = isPremium ? "bg-amber-100 text-amber-800 border-amber-200" : "bg-green-100 text-green-800 border-green-200";
+                        const accessText = isPremium ? "👑 פרימיום (למנויים)" : "🔓 פתוח לכולם";
+                        const cardStyle = isPremium ? "border-[#d4af37] border-r-4" : "border-green-400 border-r-4";
+
+                        dayEventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition border border-gray-100 ${cardStyle}">
+                            <span class="font-bold text-[#d4af37] min-w-[50px] text-xl" dir="ltr">${ev.time}</span>
+                            <div class="hidden sm:block w-px h-10 bg-gray-200"></div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-lg text-slate-800 flex flex-wrap items-center gap-2">
+                                    ${ev.topic}
+                                    <span class="text-[10px] px-2 py-0.5 rounded border shadow-sm ${accessBadgeClass}">${accessText}</span>
+                                </h4>
+                                <p class="text-sm text-gray-500 flex items-center gap-1 mt-1">👤 ${ev.lecturer}</p>
+                            </div>
+                            <span class="border ${badgeColor} text-xs font-bold px-3 py-1 rounded-full text-center whitespace-nowrap self-start sm:self-center">${ev.audience}</span>
+                        </div>`;
                     }
                 });
-                container.innerHTML += `<div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"><div class="bg-[#0f172a] text-[#d4af37] px-6 py-4 border-b-4 border-[#d4af37]"><h3 class="text-xl font-bold flex items-center gap-2">📅 ${dayData.displayName}</h3></div><div class="p-6 space-y-3 bg-gray-50">${eventsHTML}</div></div>`;
+                
+                // אם יש לפחות אירוע אחד תקין להצגה ביום הזה
+                if (hasVisibleEvents) {
+                    count++;
+                    container.innerHTML += `<div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"><div class="bg-[#0f172a] text-[#d4af37] px-6 py-4 border-b-4 border-[#d4af37]"><h3 class="text-xl font-bold flex items-center gap-2">📅 ${dayData.displayName}</h3></div><div class="p-6 space-y-3 bg-gray-50">${dayEventsHTML}</div></div>`;
+                }
             }
             
             if (count === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-500 bg-white rounded-xl border">לא נמצאו שיעורים בחודש זה.</div>';
+                container.innerHTML = '<div class="text-center py-10 text-gray-500 bg-white rounded-xl border">לא נמצאו שיעורים תואמים לחיפוש.</div>';
             }
         }
 
-        // ==================== לוגיקת טעינת המאמרים ====================
         async function fetchArticlesData() {
             if(ARTICLES_CSV_URL.includes('הכנס_את_המספר_כאן')) {
                 document.getElementById('articlesContainer').innerHTML = '<div class="col-span-full py-16 text-center text-gray-400 font-medium text-lg">יש להגדיר בקוד האתר את הקישור לגיליון המאמרים.</div>';
@@ -1001,64 +898,41 @@
                 const response = await fetch(ARTICLES_CSV_URL);
                 const data = await response.text();
                 parseAndRenderArticles(data);
-            } catch (error) { 
-                console.error("שגיאה בטעינת המאמרים:", error);
-                document.getElementById('articlesContainer').innerHTML = '<div class="col-span-full py-16 text-center text-red-500 font-medium text-lg">שגיאה בטעינת המאמרים. בדוק את הקישור לגיליון.</div>';
-            }
+            } catch (error) { console.error("שגיאה בטעינת המאמרים:", error); }
         }
 
         function parseAndRenderArticles(csvText) {
-            // פונקציה חכמה לקריאת CSV שתומכת בירידות שורה בתוך תאים (עבור מאמרים ארוכים)
             function csvToArray(text) {
                 let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
                 for (l of text) {
-                    if ('"' === l) {
-                        if (s && l === p) row[i] += l;
-                        s = !s;
-                    } else if (',' === l && s) l = row[++i] = '';
-                    else if ('\n' === l && s) {
-                        if ('\r' === p) row[i] = row[i].slice(0, -1);
-                        row = ret[++r] = [l = '']; i = 0;
-                    } else row[i] += l;
+                    if ('"' === l) { if (s && l === p) row[i] += l; s = !s; } 
+                    else if (',' === l && s) l = row[++i] = '';
+                    else if ('\n' === l && s) { if ('\r' === p) row[i] = row[i].slice(0, -1); row = ret[++r] = [l = '']; i = 0; } 
+                    else row[i] += l;
                     p = l;
                 }
                 return ret;
             }
-
             const rows = csvToArray(csvText);
             const container = document.getElementById('articlesContainer');
             container.innerHTML = '';
-            
-            let count = 0;
-            // מתחיל משורה 1 כדי לדלג על הכותרות
             for (let i = 1; i < rows.length; i++) {
                 const row = rows[i];
-                if (!row || row.length < 3 || !row[2]) continue; // מדלג על שורות ריקות
-                
-                // תאריך | קטגוריה | כותרת | מחבר | תקציר | תוכן מלא
+                if (!row || row.length < 3 || !row[2]) continue; 
                 const date = row[0] ? row[0].trim() : '';
                 const category = row[1] ? row[1].trim() : 'כללי';
                 const title = row[2] ? row[2].trim() : '';
                 const author = row[3] ? row[3].trim() : 'צוות הפורום';
                 const excerpt = row[4] ? row[4].trim() : '';
                 const fullContent = row[5] ? row[5].trim() : 'אין תוכן זמין למאמר זה.';
-                
-                count++;
-
                 let icon = "📝";
-                if(category.includes('הדרכה') || category.includes('שלום בית')) icon = "📖";
-                if(category.includes('שאלות') || category.includes('שו"ת')) icon = "💬";
-
+                if(category.includes('הדרכה')) icon = "📖";
                 const safeTitle = title.replace(/'/g, "\\'");
                 const safeAuthor = author.replace(/'/g, "\\'");
-                const encodedContent = encodeURIComponent(fullContent); // קידוד התוכן הארוך כדי להעביר אותו בבטחה לחלון הקופץ
-
+                const encodedContent = encodeURIComponent(fullContent);
                 container.innerHTML += `
                 <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
-                    <div class="h-32 bg-slate-800 flex items-center justify-center text-[#d4af37] text-4xl font-serif relative">
-                        ${icon}
-                        <div class="absolute bottom-2 right-2 bg-black/40 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm">${date}</div>
-                    </div>
+                    <div class="h-32 bg-slate-800 flex items-center justify-center text-[#d4af37] text-4xl font-serif relative">${icon}</div>
                     <div class="p-6 flex-grow flex flex-col">
                         <span class="text-xs font-bold text-blue-600 mb-2 block">${category}</span>
                         <h3 class="font-bold text-lg text-slate-800 mb-2">${title}</h3>
@@ -1070,20 +944,14 @@
                     </div>
                 </article>`;
             }
-
-            if(count === 0) {
-                container.innerHTML = '<div class="col-span-full py-16 text-center text-gray-400 font-medium text-lg">לא נמצאו מאמרים.</div>';
-            }
         }
 
-        // חשיפת פונקציות ל-HTML בשל השימוש ב-type="module"
         Object.assign(window, {
             switchTab, toggleLogin, requireLogin, openModal, closeModal, openMailingListModal,
             handleFileClick, openFeedback, closeNewsletterPopup, switchViewMode, navigateTo,
-            jumpToFolderFromSearch, filterSchedule, updateHistoryView, saveToHistory, openArticleModal
+            jumpToFolderFromSearch, filterSchedule, handleScheduleSearch, updateHistoryView, saveToHistory, openArticleModal
         });
 
-        // ==================== הפעלת האתר ====================
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('home'); 
             showSkeletons();
