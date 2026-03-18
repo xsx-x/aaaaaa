@@ -386,10 +386,10 @@
     </div>
 
     <div id="messageModal" class="modal z-[60]">
-        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center relative mx-4">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center relative mx-4 z-[70]">
             <h3 class="text-lg font-bold text-[#0f172a] mb-2">הודעת מערכת</h3>
-            <p id="messageModalText" class="text-gray-600 mb-4 text-sm"></p>
-            <button onclick="closeModal('messageModal')" class="bg-[#0f172a] text-white px-6 py-2 rounded-lg font-medium">הבנתי</button>
+            <p id="messageModalText" class="text-gray-700 mb-4 text-sm font-medium whitespace-pre-line text-right"></p>
+            <button onclick="closeModal('messageModal')" class="w-full bg-[#0f172a] hover:bg-slate-800 text-white px-6 py-2 rounded-lg font-medium transition">הבנתי</button>
         </div>
     </div>
 
@@ -465,6 +465,11 @@
         window.currentScheduleMonthFilter = 'all'; 
         let unsubscribeHistory = null;
 
+        // פונקציית הגנה ("חיסון") מתקדמת נגד סימני פיסוק (מירכאות/גרש) בטקסטים המגיעים מאקסל
+        function safeEncode(str) {
+            return encodeURIComponent(str || '').replace(/'/g, "%27").replace(/"/g, "%22");
+        }
+
         function showMessage(msg) {
             document.getElementById('messageModalText').innerText = msg;
             openModal('messageModal');
@@ -539,10 +544,10 @@
                 if(item.type === "וידאו") { icon = "🎥"; iconColor = "text-blue-600"; bgColor = "bg-blue-100"; btnText = "המשך צפייה"; }
                 if(item.type === "שמע") { icon = "🎧"; iconColor = "text-purple-600"; bgColor = "bg-purple-100"; btnText = "המשך האזנה"; }
                 
-                const encLink = encodeURIComponent(item.link || '');
-                const encName = encodeURIComponent(item.name || '');
-                const encType = encodeURIComponent(item.type || '');
-                const encLecturer = encodeURIComponent(item.lecturer || '');
+                const encLink = safeEncode(item.link);
+                const encName = safeEncode(item.name);
+                const encType = safeEncode(item.type);
+                const encLecturer = safeEncode(item.lecturer);
                 
                 container.innerHTML += `
                     <div onclick="handleFileClick('${encLink}', '${encName}', false, '${encType}', '${encLecturer}')" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between hover:border-purple-300 transition cursor-pointer gap-4">
@@ -594,10 +599,16 @@
                     await signInWithPopup(auth, provider);
                 } catch (e) {
                     console.error("Login error", e);
+                    // הבלש החכם שמזהה במדויק את הבעיה של הדומיין
                     if (e.code === 'auth/unauthorized-domain') {
-                        showMessage("שגיאת אבטחה: הדומיין של האתר לא מורשה ב-Firebase.\nיש לוודא שהוספת את xsx-x.github.io בדיוק כפי שהוא להגדרות Authorized Domains ב-Firebase.");
+                        const host = window.location.hostname;
+                        if (!host) {
+                            showMessage('❌ שגיאה: פתחת את הקובץ ישירות מהמחשב (כקובץ מקומי).\n\nמערכת האבטחה של גוגל לא מאפשרת התחברות מקבצים פנימיים במחשב.\nחובה להיכנס דרך הקישור הרשמי של גיטהאב (https://xsx-x.github.io/aaaaaa) כדי שזה יעבוד.');
+                        } else {
+                            showMessage(`❌ שגיאת דומיין!\n\nהדפדפן מנסה כעת להתחבר מהכתובת הבאה בדיוק:\n[ ${host} ]\n\nאנא העתק את הכתובת הזו בדיוק (ללא רווחים), וודא שזה בדיוק מה ששמת ב-Firebase תחת Authorized domains.`);
+                        }
                     } else {
-                        showMessage("התרחשה שגיאה בעת ניסיון ההתחברות לגוגל. נסה שוב מאוחר יותר.");
+                        showMessage("התרחשה שגיאה בעת ניסיון ההתחברות: " + e.message);
                     }
                 }
             }
@@ -779,7 +790,7 @@
                 if(lecturer) lecturersSet.add(lecturer);
                 let isNew = false;
                 if(creationDate) {
-                    const fileDate = new Date(creationDate.split('/').reverse().join('-')); // מטפל בתאריכים בסגנון ישראלי
+                    const fileDate = new Date(creationDate.split('/').reverse().join('-')); 
                     if (!isNaN(fileDate.getTime())) {
                         const diffDays = Math.ceil(Math.abs(today - fileDate) / (1000 * 60 * 60 * 24));
                         if(diffDays <= 14) isNew = true;
@@ -850,7 +861,7 @@
                 
                 if (item.type === "folder") {
                     const pathStr = item.pathArr ? item.pathArr.join('||') : item.name;
-                    const encPath = encodeURIComponent(pathStr);
+                    const encPath = safeEncode(pathStr);
                     const itemCount = Object.keys(item.children || {}).length;
                     const itemText = itemCount === 1 ? '1 פריט' : `${itemCount} פריטים`;
                     gridDiv.innerHTML += `<div onclick="jumpToFolderFromSearch('${encPath}')" class="bg-slate-50 rounded-xl p-5 border border-slate-200 cursor-pointer flex flex-col items-center justify-center text-center relative hover:bg-white hover:border-[#d4af37] transition-all group min-h-[160px]">${newBadge}<span class="text-5xl mb-3 drop-shadow-sm group-hover:scale-110 transition-transform">📁</span><span class="font-bold text-slate-800 line-clamp-2">${item.name}</span><span class="text-xs text-gray-500 mt-2 bg-gray-200 px-3 py-1 rounded-full">${itemText}</span></div>`;
@@ -862,10 +873,10 @@
                     const isPremium = safeAccess.includes('מנויים');
                     const badgeClass = isPremium ? "bg-amber-100 text-amber-800 border-amber-200" : "bg-green-100 text-green-800 border-green-200";
                     
-                    const encLink = encodeURIComponent(item.link || '');
-                    const encName = encodeURIComponent(item.name || '');
-                    const encType = encodeURIComponent(item.type || '');
-                    const encLecturer = encodeURIComponent(item.lecturer || '');
+                    const encLink = safeEncode(item.link);
+                    const encName = safeEncode(item.name);
+                    const encType = safeEncode(item.type);
+                    const encLecturer = safeEncode(item.lecturer);
 
                     gridDiv.innerHTML += `
                     <div class="bg-white rounded-xl border border-gray-200 flex flex-col relative h-full hover:shadow-md transition">
@@ -1052,11 +1063,11 @@
                 let icon = "📝";
                 if(category.includes('הדרכה')) icon = "📖";
                 
-                const encTitle = encodeURIComponent(title);
-                const encAuthor = encodeURIComponent(author);
-                const encDate = encodeURIComponent(date);
-                const encCat = encodeURIComponent(category);
-                const encContent = encodeURIComponent(fullContent);
+                const encTitle = safeEncode(title);
+                const encAuthor = safeEncode(author);
+                const encDate = safeEncode(date);
+                const encCat = safeEncode(category);
+                const encContent = safeEncode(fullContent);
 
                 container.innerHTML += `
                 <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
