@@ -754,15 +754,22 @@
             } else {
                 try {
                     const provider = new GoogleAuthProvider();
-                    await signInWithRedirect(auth, provider);
+                    // שימוש בשיטת ה-Popup המותאמת לאינטרנט מסונן
+                    await signInWithPopup(auth, provider);
                 } catch (e) {
                     console.error("Login error", e);
-                    if (e.code === 'auth/unauthorized-domain') {
+                    // טיפול בשגיאות ספציפיות
+                    if (e.code === 'auth/popup-blocked') {
+                        showMessage('❌ שגיאה: החלון הקופץ נחסם.\n\nאנא אשר פתיחת חלונות קופצים (Pop-ups) עבור אתר זה בדפדפן שלך ונסה שוב.');
+                    } else if (e.code === 'auth/popup-closed-by-user') {
+                        // המשתמש סגר את החלון באמצע - אפשר פשוט להתעלם ולא להציג שגיאה מבהילה
+                        console.log("המשתמש סגר את החלון טרם השלמת ההתחברות.");
+                    } else if (e.code === 'auth/unauthorized-domain') {
                         const host = window.location.hostname;
                         if (!host) {
                             showMessage('❌ שגיאה: פתחת את הקובץ מקומית.\nחובה להיכנס דרך הקישור הרשמי כדי להתחבר.');
                         } else {
-                            showMessage(`❌ הדפדפן מנסה להתחבר מהכתובת:\n${host}\n\nאנא הוסף כתובת זו במדויק להגדרות Firebase.`);
+                            showMessage(`❌ הדפדפן מנסה להתחבר מהכתובת:\n${host}\n\nאנא הוסף כתובת זו במדויק להגדרות Firebase תחת Authorized domains.`);
                         }
                     } else {
                         showMessage("התרחשה שגיאה בעת ניסיון ההתחברות: " + e.message);
