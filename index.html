@@ -378,6 +378,24 @@
         </div>
     </div>
 
+    <!-- מודאל קריאת מאמר -->
+    <div id="articleModal" class="modal z-[60]">
+        <div class="bg-white rounded-2xl p-6 md:p-10 max-w-4xl w-full relative mx-4 max-h-[90vh] flex flex-col">
+            <button onclick="closeModal('articleModal')" class="absolute top-4 left-4 text-gray-400 hover:text-gray-800 text-2xl font-bold bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
+            <div class="mb-6 border-b border-gray-100 pb-4">
+                <span id="modalArticleCategory" class="text-xs font-bold text-blue-600 mb-2 block"></span>
+                <h2 id="modalArticleTitle" class="text-3xl font-bold text-[#0f172a] mb-2"></h2>
+                <div class="text-sm text-gray-500 flex gap-4">
+                    <span id="modalArticleAuthor"></span>
+                    <span id="modalArticleDate"></span>
+                </div>
+            </div>
+            <div id="modalArticleContent" class="overflow-y-auto pr-4 text-gray-700 leading-relaxed space-y-4 text-lg flex-grow whitespace-pre-wrap custom-scrollbar">
+                <!-- תוכן המאמר יכנס כאן -->
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== JavaScript & Firebase (ES Modules) ==================== -->
     <script type="module">
         // --- קישורי הנתונים מ-Google Sheets ---
@@ -637,6 +655,20 @@
             if(!window.isLoggedIn) document.getElementById('newsletterPopup').classList.remove('translate-y-full', 'opacity-0');
         }, 8000);
         function closeNewsletterPopup() { document.getElementById('newsletterPopup').classList.add('translate-y-full', 'opacity-0'); }
+
+        // הפעלת מודאל המאמרים
+        function openArticleModal(title, author, date, category, encodedContent) {
+            document.getElementById('modalArticleTitle').innerText = title;
+            document.getElementById('modalArticleAuthor').innerText = "✍️ " + author;
+            document.getElementById('modalArticleDate').innerText = "📅 " + date;
+            document.getElementById('modalArticleCategory').innerText = category;
+            
+            // מפענח את התוכן חזרה מטקסט מקודד
+            const content = decodeURIComponent(encodedContent);
+            document.getElementById('modalArticleContent').innerText = content; // משתמש ב-innerText כדי לשמור על ירידות השורה הטבעיות
+            
+            openModal('articleModal');
+        }
 
         // ==================== לוגיקת סייר הקבצים ====================
         function showSkeletons() {
@@ -976,29 +1008,50 @@
         }
 
         function parseAndRenderArticles(csvText) {
-            const lines = csvText.split('\n');
+            // פונקציה חכמה לקריאת CSV שתומכת בירידות שורה בתוך תאים (עבור מאמרים ארוכים)
+            function csvToArray(text) {
+                let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+                for (l of text) {
+                    if ('"' === l) {
+                        if (s && l === p) row[i] += l;
+                        s = !s;
+                    } else if (',' === l && s) l = row[++i] = '';
+                    else if ('\n' === l && s) {
+                        if ('\r' === p) row[i] = row[i].slice(0, -1);
+                        row = ret[++r] = [l = '']; i = 0;
+                    } else row[i] += l;
+                    p = l;
+                }
+                return ret;
+            }
+
+            const rows = csvToArray(csvText);
             const container = document.getElementById('articlesContainer');
             container.innerHTML = '';
             
             let count = 0;
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i] || !lines[i].trim()) continue;
-                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            // מתחיל משורה 1 כדי לדלג על הכותרות
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row || row.length < 3 || !row[2]) continue; // מדלג על שורות ריקות
                 
-                // תאריך | קטגוריה | כותרת | תקציר | מחבר | קישור
-                const date = row[0] ? row[0].replace(/"/g, '').trim() : '';
-                const category = row[1] ? row[1].replace(/"/g, '').trim() : 'כללי';
-                const title = row[2] ? row[2].replace(/"/g, '').trim() : '';
-                const excerpt = row[3] ? row[3].replace(/"/g, '').trim() : '';
-                const author = row[4] ? row[4].replace(/"/g, '').trim() : 'צוות הפורום';
-                const link = row[5] ? row[5].replace(/"/g, '').trim() : '#';
+                // תאריך | קטגוריה | כותרת | מחבר | תקציר | תוכן מלא
+                const date = row[0] ? row[0].trim() : '';
+                const category = row[1] ? row[1].trim() : 'כללי';
+                const title = row[2] ? row[2].trim() : '';
+                const author = row[3] ? row[3].trim() : 'צוות הפורום';
+                const excerpt = row[4] ? row[4].trim() : '';
+                const fullContent = row[5] ? row[5].trim() : 'אין תוכן זמין למאמר זה.';
                 
-                if(!title) continue;
                 count++;
 
                 let icon = "📝";
                 if(category.includes('הדרכה') || category.includes('שלום בית')) icon = "📖";
                 if(category.includes('שאלות') || category.includes('שו"ת')) icon = "💬";
+
+                const safeTitle = title.replace(/'/g, "\\'");
+                const safeAuthor = author.replace(/'/g, "\\'");
+                const encodedContent = encodeURIComponent(fullContent); // קידוד התוכן הארוך כדי להעביר אותו בבטחה לחלון הקופץ
 
                 container.innerHTML += `
                 <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
@@ -1012,7 +1065,7 @@
                         <p class="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">${excerpt}</p>
                         <div class="flex justify-between items-center mt-auto border-t border-gray-100 pt-4">
                             <span class="text-xs text-gray-500 font-medium">✍️ ${author}</span>
-                            <a href="${link}" target="_blank" class="text-sm font-bold text-white bg-[#0f172a] hover:bg-slate-700 px-4 py-1.5 rounded-lg transition">קרא עוד</a>
+                            <button onclick="openArticleModal('${safeTitle}', '${safeAuthor}', '${date}', '${category}', '${encodedContent}')" class="text-sm font-bold text-white bg-[#0f172a] hover:bg-slate-700 px-4 py-1.5 rounded-lg transition">קרא מאמר</button>
                         </div>
                     </div>
                 </article>`;
@@ -1027,7 +1080,7 @@
         Object.assign(window, {
             switchTab, toggleLogin, requireLogin, openModal, closeModal, openMailingListModal,
             handleFileClick, openFeedback, closeNewsletterPopup, switchViewMode, navigateTo,
-            jumpToFolderFromSearch, filterSchedule, updateHistoryView, saveToHistory
+            jumpToFolderFromSearch, filterSchedule, updateHistoryView, saveToHistory, openArticleModal
         });
 
         // ==================== הפעלת האתר ====================
