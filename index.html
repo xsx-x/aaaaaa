@@ -645,6 +645,94 @@
             openModal('articleModal');
         }
 
+        function openMailingListModal() { showMessage("כאן יפתח בעתיד טופס הרשמה לתפוצה של גוגל פורמס"); }
+
+        function openFeedback(name) {
+            document.getElementById('feedbackLessonName').innerText = "עבור השיעור: " + name;
+            openModal('feedbackModal');
+        }
+
+        setTimeout(() => {
+            if(!window.isLoggedIn) {
+                const popup = document.getElementById('newsletterPopup');
+                if(popup) popup.classList.remove('translate-y-full', 'opacity-0');
+            }
+        }, 8000);
+
+        function closeNewsletterPopup() { 
+            const popup = document.getElementById('newsletterPopup');
+            if(popup) popup.classList.add('translate-y-full', 'opacity-0'); 
+        }
+
+        function showSkeletons() {
+            const grid = document.getElementById('explorerGrid');
+            if(grid) grid.innerHTML = Array(9).fill().map(() => `<div class="bg-white rounded-xl border border-gray-100 p-5 h-48 flex flex-col items-center justify-center animate-pulse"><div class="w-16 h-16 bg-slate-200 rounded-full mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div><div class="h-3 bg-slate-200 rounded w-1/2"></div></div>`).join('');
+        }
+
+        function switchViewMode(mode) {
+            window.currentViewMode = mode;
+            window.currentPathArr = []; 
+            clearSearch(false);
+            
+            document.getElementById('btnViewFolders').className = mode === 'folders' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
+            document.getElementById('btnViewLecturers').className = mode === 'lecturers' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
+            
+            renderCurrentFolder();
+        }
+
+        function navigateTo(index) {
+            clearSearch(false);
+            if (index === -1) window.currentPathArr = []; else window.currentPathArr = window.currentPathArr.slice(0, index + 1);
+            renderCurrentFolder();
+        }
+
+        function jumpToFolderFromSearch(pathString) {
+            const pathArray = pathString.split('||');
+            if(pathArray[0] === "ראשי") { window.currentViewMode = 'folders'; pathArray.shift(); } 
+            else { window.currentViewMode = 'lecturers'; }
+
+            window.currentPathArr = pathArray;
+            document.getElementById('btnViewFolders').className = window.currentViewMode === 'folders' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
+            document.getElementById('btnViewLecturers').className = window.currentViewMode === 'lecturers' ? "px-6 py-2 rounded-md font-bold text-sm transition bg-white text-[#0f172a] shadow" : "px-6 py-2 rounded-md font-bold text-sm transition text-gray-500 hover:text-gray-700";
+
+            clearSearch(false);
+            renderCurrentFolder();
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const selectedLecturer = document.getElementById('lecturerFilter').value;
+            const showNewOnly = document.getElementById('newFilterToggle').checked;
+            const breadcrumbs = document.getElementById('breadcrumbsContainer');
+            const searchHeader = document.getElementById('searchResultsHeader');
+
+            if (searchTerm === "" && selectedLecturer === "" && !showNewOnly) {
+                breadcrumbs.classList.remove('hidden'); searchHeader.classList.add('hidden');
+                renderCurrentFolder(); return;
+            }
+            breadcrumbs.classList.add('hidden'); searchHeader.classList.remove('hidden');
+
+            const results = window.allSearchableItems.filter(item => {
+                const safePath = item.path || "";
+                const searchString = item.type === "folder" ? item.name : (item.name + " " + safePath);
+                const matchName = searchString.toLowerCase().includes(searchTerm);
+                const matchLecturer = selectedLecturer === "" || (item.lecturer && item.lecturer === selectedLecturer);
+                const matchNew = !showNewOnly || (item.isNew && item.type !== 'folder');
+                return matchName && matchLecturer && matchNew;
+            });
+            document.getElementById('searchCount').innerText = `${results.length} תוצאות נמצאו`;
+            drawGrid(results);
+        }
+
+        function clearSearch(render = true) {
+            document.getElementById('searchInput').value = "";
+            document.getElementById('lecturerFilter').value = "";
+            document.getElementById('newFilterToggle').checked = false;
+            document.getElementById('breadcrumbsContainer').classList.remove('hidden');
+            document.getElementById('searchResultsHeader').classList.add('hidden');
+            if(render) renderCurrentFolder();
+        }
+
         async function fetchExplorerData() {
             if(EXPLORER_CSV_URL.includes('הכנס_את_הקישור')) return;
             try {
@@ -960,7 +1048,8 @@
         Object.assign(window, {
             switchTab, toggleLogin, requireLogin, openModal, closeModal, openMailingListModal,
             handleFileClick, openFeedback, closeNewsletterPopup, switchViewMode, navigateTo,
-            jumpToFolderFromSearch, filterSchedule, handleScheduleSearch, updateHistoryView, saveToHistory, openArticleModal
+            jumpToFolderFromSearch, filterSchedule, handleScheduleSearch, updateHistoryView, saveToHistory, openArticleModal,
+            clearSearch, handleSearch, showSkeletons
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -969,6 +1058,15 @@
             fetchExplorerData();
             fetchScheduleData();
             fetchArticlesData();
+
+            // הוספת מאזינים לשורות החיפוש
+            const searchInput = document.getElementById('searchInput');
+            const lecturerFilter = document.getElementById('lecturerFilter');
+            const newFilterToggle = document.getElementById('newFilterToggle');
+            
+            if(searchInput) searchInput.addEventListener('input', handleSearch);
+            if(lecturerFilter) lecturerFilter.addEventListener('change', handleSearch);
+            if(newFilterToggle) newFilterToggle.addEventListener('change', handleSearch);
         });
     </script>
 </body>
