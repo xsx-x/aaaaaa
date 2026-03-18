@@ -42,48 +42,51 @@
 
     <!-- ==================== כותרת ותפריט ניווט ==================== -->
     <header class="bg-[#0f172a] text-white shadow-lg border-b-4 border-[#d4af37] sticky top-0 z-40">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-                <div class="text-center md:text-right mb-4 md:mb-0 cursor-pointer" onclick="switchTab('home')">
-                    <h1 class="text-3xl font-bold text-[#d4af37]">פורום הבית היהודי</h1>
-                    <p class="text-sm text-gray-300 mt-1 tracking-wide">בנשיאות מורינו הגאון הגדול ר' עמרם פריד שליט"א</p>
+        <!-- השורה העליונה הוצרה בעזרת הקטנת הריפוד (py-2 במקום py-4) -->
+        <div class="container mx-auto px-4 py-2 sm:py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-right mb-3 md:mb-0 cursor-pointer" onclick="switchTab('home')">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-[#d4af37]">פורום הבית היהודי</h1>
+                    <p class="text-xs sm:text-sm text-gray-300 mt-1 tracking-wide">בנשיאות מורינו הגאון הגדול ר' עמרם פריד שליט"א</p>
                 </div>
                 <!-- אזור משתמש (התחברות) -->
-                <div class="flex items-center gap-4 bg-slate-800 p-2 rounded-xl border border-slate-700">
-                    <span id="liveViewers" class="text-green-400 text-sm font-bold flex items-center gap-1">
+                <div class="flex items-center gap-3 bg-slate-800 p-1.5 sm:p-2 rounded-xl border border-slate-700">
+                    <span id="liveViewers" class="text-green-400 text-xs sm:text-sm font-bold flex items-center gap-1">
                         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                         <span id="viewersCount">--</span> צופים כעת
                     </span>
-                    <div class="w-px h-6 bg-slate-600"></div>
-                    <button id="loginBtn" onclick="toggleLogin()" class="flex items-center gap-2 text-sm font-medium hover:text-[#d4af37] transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-                        <span id="loginText">התחברות (Google)</span>
+                    <div class="w-px h-5 bg-slate-600"></div>
+                    <button id="loginBtn" onclick="toggleLogin()" class="flex items-center gap-1.5 text-xs sm:text-sm font-medium hover:text-[#d4af37] transition">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                        <span id="loginText">התחברות</span>
                     </button>
                 </div>
             </div>
-            
-            <nav class="flex space-x-4 space-x-reverse bg-slate-800/50 p-1.5 rounded-lg text-sm md:text-base overflow-x-auto custom-scrollbar">
-                <button onclick="switchTab('home')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">ראשי</button>
-                <button onclick="switchTab('library')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">אוצר השיעורים</button>
-                <button onclick="switchTab('schedule')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">לוח זמנים</button>
-                <button onclick="switchTab('blog')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">מאמרים</button>
-                <button onclick="switchTab('history')" id="navHistory" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap hidden">צפיתי לאחרונה</button>
-                <button onclick="switchTab('about')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">פרטים ומידע</button>
-            </nav>
         </div>
+        
+        <!-- שורת התפריט קיבלה ID כדי שנוכל להסתיר אותה בדף הבית -->
+        <nav id="mainNavMenu" class="flex space-x-4 space-x-reverse bg-slate-800/50 p-1 md:p-1.5 text-sm md:text-base overflow-x-auto custom-scrollbar">
+            <button onclick="switchTab('home')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">ראשי</button>
+            <button onclick="switchTab('library')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">אוצר השיעורים</button>
+            <button onclick="switchTab('schedule')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">לוח זמנים</button>
+            <button onclick="switchTab('blog')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">מאמרים</button>
+            <button onclick="switchTab('history')" id="navHistory" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap hidden">צפיתי לאחרונה</button>
+            <button onclick="switchTab('about')" class="nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap">פרטים ומידע</button>
+        </nav>
     </header>
 
     <main class="container mx-auto px-4 py-8 flex-grow">
         
         <!-- ================= דף ראשי (Home) ================= -->
         <div id="home" class="tab-content active">
-            <div class="max-w-5xl mx-auto">
+            <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-4xl md:text-5xl font-bold text-[#0f172a] mb-4">ברוכים הבאים לפורום הבית היהודי</h2>
                     <p class="text-xl text-gray-600 max-w-2xl mx-auto">המרכז הגדול לשיעורי תורה, הדרכת חתנים, ייעוץ זוגי והלכה - מפי טובי הרבנים והמרצים, בנשיאות הגאון רבי עמרם פריד שליט"א.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- הרשת עודכנה כדי להכיל 5 כפתורים בצורה יפה -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                     <button onclick="switchTab('library')" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-8 flex flex-col items-center justify-center text-center border-b-4 border-blue-500 group">
                         <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform">📚</div>
                         <h3 class="text-2xl font-bold text-slate-800 mb-2">אוצר השיעורים</h3>
@@ -94,6 +97,14 @@
                         <h3 class="text-2xl font-bold text-slate-800 mb-2">זמני השיעורים</h3>
                         <p class="text-gray-500 text-sm">לוח שיעורים עדכני של כל ההרצאות במרחב הדיגיטלי ובקו הטלפון.</p>
                     </button>
+                    <button onclick="switchTab('blog')" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-8 flex flex-col items-center justify-center text-center border-b-4 border-cyan-500 group">
+                        <div class="w-20 h-20 bg-cyan-50 text-cyan-600 rounded-full flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform">📝</div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">מאמרים ודברי תורה</h3>
+                        <p class="text-gray-500 text-sm">מאמרים, סיכומים והדרכות מפי רבני ומרצי הפורום.</p>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
                     <button onclick="switchTab('about')" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-8 flex flex-col items-center justify-center text-center border-b-4 border-[#d4af37] group">
                         <div class="w-20 h-20 bg-amber-50 text-[#d4af37] rounded-full flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform">ℹ️</div>
                         <h3 class="text-2xl font-bold text-slate-800 mb-2">פרטים ומידע</h3>
@@ -175,7 +186,6 @@
                     </div>
                 </div>
                 <div class="w-full lg:w-3/4">
-                    <!-- תיבת החיפוש החדשה של לוח השיעורים -->
                     <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                         <div class="relative">
                             <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">🔍</span>
@@ -288,7 +298,6 @@
                     <button onclick="toggleLogin()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition">התחבר באמצעות חשבון Google</button>
                 </div>
 
-                <!-- המיכל שבו יוצגו הפריטים האמיתיים -->
                 <div id="loggedInState" class="space-y-4">
                     <div id="historyContainer" class="space-y-4">
                         <div class="text-center py-10 text-gray-500">טוען היסטוריה...</div>
@@ -307,7 +316,6 @@
             </div>
             
             <div id="articlesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <!-- המאמרים יטענו לכאן בצורה דינאמית מה-CSV -->
                 <div class="col-span-full py-16 text-center text-gray-500 font-medium text-lg">טוען מאמרים מהמאגר...</div>
             </div>
         </div>
@@ -378,7 +386,6 @@
         </div>
     </div>
 
-    <!-- מודאל הודעות מערכת -->
     <div id="messageModal" class="modal z-[60]">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center relative mx-4">
             <h3 class="text-lg font-bold text-[#0f172a] mb-2">הודעת מערכת</h3>
@@ -387,7 +394,6 @@
         </div>
     </div>
 
-    <!-- מודאל קריאת מאמר -->
     <div id="articleModal" class="modal z-[60]">
         <div class="bg-white rounded-2xl p-6 md:p-10 max-w-4xl w-full relative mx-4 max-h-[90vh] flex flex-col">
             <button onclick="closeModal('articleModal')" class="absolute top-4 left-4 text-gray-400 hover:text-gray-800 text-2xl font-bold bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
@@ -407,12 +413,10 @@
 
     <!-- ==================== JavaScript & Firebase (ES Modules) ==================== -->
     <script type="module">
-        // --- קישורי הנתונים מ-Google Sheets ---
         const EXPLORER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=0&single=true&output=csv';
         const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1693315274&single=true&output=csv';
         const ARTICLES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1100608744&single=true&output=csv'; 
         
-        // --- ייבוא ספריות Firebase מ-CDN ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -459,7 +463,7 @@
         window.isLoggedIn = false;
         window.isPremiumUser = false; 
         window.currentUser = null;
-        window.currentScheduleMonthFilter = 'all'; // משתנה גלובלי לסינון חודשים בלוח
+        window.currentScheduleMonthFilter = 'all'; 
         let unsubscribeHistory = null;
 
         function showMessage(msg) {
@@ -480,7 +484,7 @@
                 } else {
                     window.currentUser = null;
                     window.isLoggedIn = false;
-                    document.getElementById('loginText').innerText = "התחברות (Google)";
+                    document.getElementById('loginText').innerText = "התחברות";
                     document.getElementById('loginBtn').classList.remove('text-[#d4af37]');
                     document.getElementById('navHistory').classList.add('hidden');
                     if(document.getElementById('history').classList.contains('active')) switchTab('home');
@@ -552,14 +556,26 @@
         }
 
         function switchTab(tabId) {
+            // החלפת התוכן הפעיל
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+            
+            // שינוי עיצוב הכפתורים בתפריט
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium text-white hover:bg-slate-700 whitespace-nowrap";
                 if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
                     btn.className = "nav-btn px-4 md:px-5 py-2 rounded-md transition font-medium bg-[#d4af37] text-[#0f172a] shadow-sm whitespace-nowrap";
                 }
             });
+            
+            // לוגיקה חדשה: הסתרת התפריט העליון כאשר נמצאים בדף הבית
+            const navMenu = document.getElementById('mainNavMenu');
+            if (tabId === 'home') {
+                navMenu.style.display = 'none';
+            } else {
+                navMenu.style.display = 'flex'; // מחזיר לתצוגת flex כמו שהוגדר ב-CSS
+            }
+
             if(tabId === 'history') updateHistoryView();
         }
 
@@ -760,7 +776,6 @@
             });
         }
 
-        // ==================== לוגיקת לוח השיעורים ====================
         async function fetchScheduleData() {
             if(SCHEDULE_CSV_URL.includes('הכנס_את_הקישור')) return;
             try {
@@ -782,7 +797,7 @@
                 const lecturer = row[2] ? row[2].replace(/"/g, '').trim() : '';
                 const topic = row[3] ? row[3].replace(/"/g, '').trim() : '';
                 const audience = row[4] ? row[4].replace(/"/g, '').trim() : '';
-                const access = row[5] ? row[5].replace(/"/g, '').trim() : 'פתוח'; // קריאת הסטטוס מעמודה F בגוגל שיטס
+                const access = row[5] ? row[5].replace(/"/g, '').trim() : 'פתוח'; 
                 
                 if(!rawDate) continue;
                 let normalizedDateKey = rawDate.replace(/'/g, '').replace(/"/g, '').replace(/\s+/g, ' ').trim();
@@ -837,14 +852,12 @@
                 let hasVisibleEvents = false;
 
                 dayData.events.forEach(ev => {
-                    // סינון לפי שם המרצה בחיפוש
                     if (term && (!ev.lecturer || !ev.lecturer.toLowerCase().includes(term))) {
-                        return; // מדלג על השיעור אם הוא לא מתאים לחיפוש
+                        return; 
                     }
 
                     const safeTopic = ev.topic || "";
                     if(safeTopic.includes('הפסקה')) {
-                        // מציג הפסקה רק אם אין חיפוש פעיל
                         if(!term) {
                             dayEventsHTML += `<div class="flex items-center gap-4 bg-slate-100 p-3 rounded-lg border border-slate-200 opacity-80"><span class="font-bold text-slate-500 min-w-[50px] text-left" dir="ltr">${ev.time}</span><div class="w-px h-6 bg-slate-300"></div><span class="font-bold text-slate-500 flex-grow text-center">☕ הפסקה</span></div>`;
                             hasVisibleEvents = true;
@@ -856,7 +869,6 @@
                         if(ev.audience === "נשים") badgeColor = "bg-pink-100 text-pink-800 border-pink-200";
                         if(ev.audience === "גברים") badgeColor = "bg-teal-100 text-teal-800 border-teal-200";
                         
-                        // קביעת נראות לפי הרשאות (פרימיום לעומת פתוח)
                         const isPremium = ev.access.includes('מנויים') || ev.access.includes('פרימיום') || ev.access.includes('שותפים');
                         const accessBadgeClass = isPremium ? "bg-amber-100 text-amber-800 border-amber-200" : "bg-green-100 text-green-800 border-green-200";
                         const accessText = isPremium ? "👑 פרימיום (למנויים)" : "🔓 פתוח לכולם";
@@ -877,7 +889,6 @@
                     }
                 });
                 
-                // אם יש לפחות אירוע אחד תקין להצגה ביום הזה
                 if (hasVisibleEvents) {
                     count++;
                     container.innerHTML += `<div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"><div class="bg-[#0f172a] text-[#d4af37] px-6 py-4 border-b-4 border-[#d4af37]"><h3 class="text-xl font-bold flex items-center gap-2">📅 ${dayData.displayName}</h3></div><div class="p-6 space-y-3 bg-gray-50">${dayEventsHTML}</div></div>`;
