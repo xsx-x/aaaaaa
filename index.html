@@ -128,7 +128,7 @@
                     
                     <span id="liveViewers" class="text-green-400 text-xs sm:text-sm font-bold flex items-center gap-1 hidden sm:flex">
                         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span id="viewersCount">--</span> צופים
+                        <span id="viewersCount">טוען...</span> צופים
                     </span>
                     <div class="w-px h-5 bg-slate-600 hidden sm:block"></div>
                     
@@ -867,7 +867,7 @@
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const GITHUB_FIREBASE_CONFIG = {
             apiKey: "AIzaSyDcMySKuq53A5E2I3jOBh9lOdfNCtDseXs",
@@ -947,18 +947,81 @@
             setTimeout(() => { document.getElementById('darkModeIcon').setAttribute('data-lucide', 'sun'); lucide.createIcons(); }, 100);
         }
 
+        // ================ מערכת נוכחות אמת (Heartbeat) ================
+        let liveViewersInterval = null;
+        let localViewersData = [];
+        let viewersUnsubscribe = null;
+
+        function setupLiveViewers(uid) {
+            if (!db) return;
+            const liveViewersRef = collection(db, 'artifacts', defaultAppId, 'public', 'data', 'live_viewers');
+            // מזהה המסמך יהיה מזהה המשתמש. כך משתמש שפתח 3 חלונות נספר רק פעם אחת.
+            const myDocRef = doc(liveViewersRef, uid);
+
+            // עדכון חותמת זמן (פעימת חיים)
+            const updatePresence = async () => {
+                try { await setDoc(myDocRef, { lastActive: Date.now() }); } 
+                catch (e) { console.warn("Presence update failed", e); }
+            };
+            
+            updatePresence();
+            if (liveViewersInterval) clearInterval(liveViewersInterval);
+            liveViewersInterval = setInterval(updatePresence, 30000); // שידור מחדש כל חצי דקה
+
+            // כשיוצאים מהדף, מנסים למחוק
+            window.addEventListener('beforeunload', () => {
+                deleteDoc(myDocRef).catch(()=>{});
+            });
+
+            // האזנה לכל הצופים החיים באוסף
+            if(viewersUnsubscribe) viewersUnsubscribe();
+            viewersUnsubscribe = onSnapshot(liveViewersRef, (snapshot) => {
+                localViewersData = [];
+                snapshot.forEach(d => localViewersData.push(d.data()));
+                renderLiveViewersCount();
+            }, (err) => console.error("Live viewers fetch error:", err));
+        }
+
+        function renderLiveViewersCount() {
+            const now = Date.now();
+            // סינון בזיכרון: רק משתמשים שהחותמת שלהם מאוחרת מהדקה האחרונה נחשבים כאונליין
+            const activeCount = localViewersData.filter(v => now - v.lastActive < 60000).length;
+            document.getElementById('viewersCount').innerText = activeCount > 0 ? activeCount : 1;
+            document.getElementById('liveViewers').classList.remove('hidden');
+        }
+
+        // ריענון מקומי כל 15 שניות כדי למחוק מהתצוגה משתמשים שעברה להם הדקה,
+        // גם אם ה-Firebase לא שחרר עדכון חדש.
+        setInterval(renderLiveViewersCount, 15000);
+        // ===============================================================
+
         if(auth) {
             onAuthStateChanged(auth, (user) => {
-                if (user && (!user.isAnonymous || isCanvas)) {
-                    window.currentUser = user;
-                    window.isLoggedIn = true;
-                    window.isPremiumUser = true; 
+                if (user) {
+                    // הפעלת מעקב צופים בזמן אמת לכל משתמש מחובר (גם אנונימי)
+                    setupLiveViewers(user.uid);
                     
-                    document.getElementById('loginText').innerText = "שלום, " + (user.displayName || "משתמש/ת");
-                    document.getElementById('loginBtn').classList.add('text-gold');
-                    document.getElementById('navHistory').classList.remove('hidden');
-                    document.getElementById('newsletterPopup').style.display = 'none';
-                    setupHistoryListener(user.uid);
+                    if (!user.isAnonymous || isCanvas) {
+                        window.currentUser = user;
+                        window.isLoggedIn = true;
+                        window.isPremiumUser = true; 
+                        
+                        document.getElementById('loginText').innerText = "שלום, " + (user.displayName || "משתמש/ת");
+                        document.getElementById('loginBtn').classList.add('text-gold');
+                        document.getElementById('navHistory').classList.remove('hidden');
+                        document.getElementById('newsletterPopup').style.display = 'none';
+                        setupHistoryListener(user.uid);
+                    } else {
+                        window.currentUser = null;
+                        window.isLoggedIn = false;
+                        window.isPremiumUser = false; 
+                        
+                        document.getElementById('loginText').innerText = "התחברות";
+                        document.getElementById('loginBtn').classList.remove('text-gold');
+                        document.getElementById('navHistory').classList.add('hidden');
+                        if(document.getElementById('history').classList.contains('active')) switchTab('home');
+                        if(unsubscribeHistory) unsubscribeHistory();
+                    }
                 } else {
                     window.currentUser = null;
                     window.isLoggedIn = false;
