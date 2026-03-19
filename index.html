@@ -82,7 +82,6 @@
 <body class="text-slate-800 dark:text-slate-200 bg-pattern bottom-nav-pb transition-colors duration-300">
 
     <!-- ==================== כותרת ותפריט ניווט ==================== -->
-    <!-- Sticky Header עם Glassmorphism -->
     <header class="bg-navy-900/90 dark:bg-navy-950/90 text-white shadow-lg border-b-4 border-gold sticky top-0 z-40 backdrop-blur-md transition-colors">
         <div class="container mx-auto px-4 py-2 sm:py-3">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -96,7 +95,6 @@
                 
                 <!-- אזור משתמש וכלים -->
                 <div class="flex items-center gap-3 bg-slate-800/80 dark:bg-slate-900/80 p-1.5 sm:p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
-                    <!-- החלפת מצב לילה -->
                     <button onclick="toggleDarkMode()" class="p-1.5 rounded-lg hover:bg-slate-700 text-gray-300 hover:text-gold transition" title="מצב לילה/יום">
                         <i data-lucide="moon" id="darkModeIcon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     </button>
@@ -116,7 +114,6 @@
             </div>
         </div>
         
-        <!-- תפריט שולחני (Desktop) -->
         <nav id="mainNavMenu" class="hidden sm:flex space-x-4 space-x-reverse bg-navy-900/50 dark:bg-black/20 p-1.5 text-sm overflow-x-auto custom-scrollbar justify-center">
             <button onclick="switchTab('home')" class="nav-btn px-5 py-2 rounded-lg transition font-semibold text-white hover:bg-slate-700 whitespace-nowrap flex items-center gap-2"><i data-lucide="home" class="w-4 h-4"></i>ראשי</button>
             <button onclick="switchTab('library')" class="nav-btn px-5 py-2 rounded-lg transition font-semibold text-white hover:bg-slate-700 whitespace-nowrap flex items-center gap-2"><i data-lucide="library" class="w-4 h-4"></i>אוצר השיעורים</button>
@@ -176,7 +173,6 @@
         <!-- ================= דף סייר השיעורים (Library) ================= -->
         <div id="library" class="tab-content">
             <div class="bg-gradient-to-r from-navy-900 to-slate-800 rounded-2xl p-6 md:p-8 mb-8 text-white shadow-lg flex flex-col md:flex-row items-center justify-between border-r-4 border-gold relative overflow-hidden">
-                <!-- עיטור גאומטרי -->
                 <div class="absolute -left-10 -top-10 opacity-10"><i data-lucide="library" class="w-48 h-48"></i></div>
                 <div class="mb-4 md:mb-0 relative z-10">
                     <h2 class="text-3xl font-extrabold text-gold mb-2">אוצר השיעורים הגדול</h2>
@@ -191,15 +187,12 @@
                 <div class="relative flex-grow w-full">
                     <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400"><i data-lucide="search" class="w-5 h-5"></i></span>
                     <input type="text" id="searchInput" placeholder="חיפוש חופשי חי (שם שיעור, רב)..." class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium">
-                    <!-- תפריט היסטוריית חיפושים -->
                     <div id="searchHistoryDropdown" class="absolute top-full left-0 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl mt-1 shadow-xl z-50 hidden flex flex-col overflow-hidden">
-                        <!-- יוזן דרך JS -->
                     </div>
                 </div>
                 <select id="lecturerFilter" class="w-full lg:w-64 py-3 px-4 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium appearance-none cursor-pointer">
                     <option value="">כל הרבנים והמרצים</option>
                 </select>
-                <!-- כפתור חדשים בלבד - הוחלף לעבוד דרך Tailwind בצורה מושלמת -->
                 <label for="newFilterToggle" class="flex items-center justify-between lg:justify-start w-full lg:w-auto cursor-pointer select-none bg-gray-50 dark:bg-slate-900 px-5 py-3 rounded-xl border border-gray-300 dark:border-slate-600 transition hover:border-gold dark:hover:border-gold">
                     <span class="mr-3 text-sm font-bold text-gray-700 dark:text-gray-300">חדשים בלבד</span>
                     <div class="relative">
@@ -275,7 +268,6 @@
             </div>
             
             <div class="max-w-5xl mx-auto space-y-8">
-                <!-- Info Section -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-gray-100 dark:border-slate-700 shadow-sm">
                     <div class="flex flex-col md:flex-row gap-8 items-center">
                         <div class="flex-grow space-y-4">
@@ -296,7 +288,6 @@
                     </div>
                 </div>
 
-                <!-- Feedbacks -->
                 <div>
                     <h3 class="text-xl font-bold text-navy-900 dark:text-white mb-6 flex items-center gap-2 justify-center"><i data-lucide="heart" class="text-gold w-5 h-5"></i> מה אומרים השואלים?</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -407,14 +398,14 @@
                         היסטוריית הצפייה שלי
                         <span class="absolute -bottom-3 right-0 w-full h-1.5 bg-purple-500 rounded-full opacity-80"></span>
                     </h2>
-                    <p class="text-gray-500 dark:text-gray-400 mt-4 font-medium">חזור בדיוק למקום שבו עצרת. כל ההיסטוריה שלך מגובה בענן לחשבון הגוגל שלך.</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-4 font-medium">חזור בדיוק למקום שבו עצרת. כל ההיסטוריה שלך מגובה בענן.</p>
                 </div>
                 
                 <div id="notLoggedInState" class="bg-white dark:bg-slate-800 p-12 rounded-3xl shadow-sm border border-gray-200 dark:border-slate-700 text-center hidden">
                     <div class="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="lock" class="w-10 h-10 text-slate-400"></i></div>
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-3">יש להתחבר כדי לראות היסטוריה</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm mx-auto">ההיסטוריה נשמרת באופן אישי ומאובטח עבור כל משתמש רשום.</p>
-                    <button onclick="toggleLogin()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-md flex items-center justify-center gap-2 mx-auto"><i data-lucide="log-in" class="w-5 h-5"></i> התחבר באמצעות חשבון Google</button>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm mx-auto">ההיסטוריה נשמרת באופן אישי ומאובטח עבור כל משתמש רשום במערכת.</p>
+                    <button onclick="toggleLogin()" class="bg-navy-900 hover:bg-navy-800 dark:bg-gold dark:text-navy-900 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-md flex items-center justify-center gap-2 mx-auto"><i data-lucide="log-in" class="w-5 h-5"></i> לחץ כאן להתחברות / הרשמה</button>
                 </div>
 
                 <div id="loggedInState" class="space-y-4">
@@ -430,7 +421,6 @@
             <div class="text-center mb-10">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-navy-900 dark:text-white inline-block relative">
                     מאמרים
-                    <!-- הצבע הוחלף מ-cyan ל-gold -->
                     <span class="absolute -bottom-3 right-0 w-full h-1.5 bg-gold rounded-full opacity-80"></span>
                 </h2>
                 <p class="text-gray-500 dark:text-gray-400 mt-4 font-medium">מאמרים, סיכומים והדרכות מפי רבני ומרצי הפורום.</p>
@@ -466,7 +456,6 @@
         <button onclick="switchTab('home')" class="mobile-nav-btn flex-1 py-3 flex flex-col items-center gap-1 hover:text-gold transition"><i data-lucide="home" class="w-5 h-5"></i>ראשי</button>
         <button onclick="switchTab('library')" class="mobile-nav-btn flex-1 py-3 flex flex-col items-center gap-1 hover:text-gold transition"><i data-lucide="library" class="w-5 h-5"></i>שיעורים</button>
         <button onclick="switchTab('schedule')" class="mobile-nav-btn flex-1 py-3 flex flex-col items-center gap-1 hover:text-gold transition"><i data-lucide="calendar-days" class="w-5 h-5"></i>לוח</button>
-        <!-- כפתור בית הוראה למובייל -->
         <button onclick="switchTab('beit-horaah')" class="mobile-nav-btn flex-1 py-3 flex flex-col items-center gap-1 hover:text-gold transition"><i data-lucide="message-circle-question" class="w-5 h-5"></i>הוראה</button>
         <button onclick="switchTab('blog')" class="mobile-nav-btn flex-1 py-3 flex flex-col items-center gap-1 hover:text-gold transition"><i data-lucide="file-text" class="w-5 h-5"></i>מאמרים</button>
     </nav>
@@ -673,7 +662,7 @@
         let unsubscribeHistory = null;
         let searchTimeout = null; 
         let articleBaseFontSize = 18; 
-        let authMode = 'login'; // משתנה למצב חלון ההתחברות
+        let authMode = 'login';
 
         function safeEncode(str) {
             return encodeURIComponent(str || '').replace(/'/g, "%27").replace(/"/g, "%22");
@@ -710,6 +699,9 @@
                 if (user && (!user.isAnonymous || isCanvas)) {
                     window.currentUser = user;
                     window.isLoggedIn = true;
+                    // ברגע שמשתמש מחובר למערכת עם אימייל וסיסמה - הוא מקבל אוטומטית הרשאת פרימיום לצפייה באתר
+                    window.isPremiumUser = true; 
+                    
                     document.getElementById('loginText').innerText = "שלום, " + (user.displayName || "משתמש/ת");
                     document.getElementById('loginBtn').classList.add('text-gold');
                     document.getElementById('navHistory').classList.remove('hidden');
@@ -718,6 +710,8 @@
                 } else {
                     window.currentUser = null;
                     window.isLoggedIn = false;
+                    window.isPremiumUser = false; // משתמש לא מחובר אינו פרימיום
+                    
                     document.getElementById('loginText').innerText = "התחברות";
                     document.getElementById('loginBtn').classList.remove('text-gold');
                     document.getElementById('navHistory').classList.add('hidden');
@@ -829,47 +823,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function toggleLogin() {
-            if (!auth) {
-                showMessage('מערכת ההתחברות לא הוגדרה. יש לעדכן את פרטי ה-Firebase בקוד האתר.');
-                return;
-            }
-            if (window.isLoggedIn && !window.currentUser?.isAnonymous) {
-                await signOut(auth);
-            } else {
-                try {
-                    const provider = new GoogleAuthProvider();
-                    await signInWithPopup(auth, provider);
-                } catch (e) {
-                    console.error("Login error", e);
-                    if (e.code === 'auth/popup-blocked') {
-                        showMessage('❌ שגיאה: החלון הקופץ נחסם.\n\nאנא אשר פתיחת חלונות קופצים (Pop-ups) עבור אתר זה בדפדפן שלך ונסה שוב.');
-                    } else if (e.code === 'auth/popup-closed-by-user') {
-                        console.log("המשתמש סגר את חלון ההתחברות");
-                    } else if (e.code === 'auth/unauthorized-domain') {
-                        const host = window.location.hostname;
-                        if (!host) {
-                            showMessage('❌ שגיאה: פתחת את הקובץ מקומית.\nחובה להיכנס דרך הקישור הרשמי כדי להתחבר.');
-                        } else {
-                            showMessage(`❌ הדפדפן מנסה להתחבר מהכתובת:\n${host}\n\nאנא הוסף כתובת זו במדויק להגדרות Firebase תחת Authorized domains.`);
-                        }
-                    } else {
-                        showMessage("התרחשה שגיאה בעת ניסיון ההתחברות: " + e.message);
-                    }
-                }
-            }
-        }
-
-        function updateHistoryView() {
-            if(window.isLoggedIn) {
-                document.getElementById('notLoggedInState').classList.add('hidden');
-                document.getElementById('loggedInState').classList.remove('hidden');
-            } else {
-                document.getElementById('notLoggedInState').classList.remove('hidden');
-                document.getElementById('loggedInState').classList.add('hidden');
-            }
-        }
-
         // ================ מערכת אימות (מייל/סיסמה) ================
         function switchAuthMode(mode) {
             authMode = mode;
@@ -959,7 +912,7 @@
                         document.getElementById('loginText').innerText = "שלום, " + name;
                     }
                     closeModal('authModal');
-                    showMessage("נרשמת בהצלחה למערכת!");
+                    showMessage("נרשמת בהצלחה למערכת! מעתה הגישה לשיעורים המיוחדים פתוחה עבורך.");
                 } else if (authMode === 'reset') {
                     await sendPasswordResetEmail(auth, email);
                     closeModal('authModal');
@@ -993,8 +946,11 @@
         }
 
         function requireLogin(targetTab) {
-            if (!window.isLoggedIn) switchTab('history');
-            else switchTab(targetTab);
+            if (!window.isLoggedIn) {
+                openModal('authModal');
+            } else {
+                switchTab(targetTab);
+            }
         }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -1010,6 +966,7 @@
             const type = encType ? decodeURIComponent(encType) : 'וידאו';
             const lecturer = encLecturer ? decodeURIComponent(encLecturer) : '';
             
+            // אם התוכן הוא למנויים, וגם המשתמש לא מחובר כאן תבוצע החסימה
             if (isPremiumContent && !window.isPremiumUser) {
                 openModal('premiumModal');
             } else {
