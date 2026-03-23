@@ -124,24 +124,27 @@
                 </div>
                 
                 <!-- אזור משתמש וכלים -->
-                <div class="flex items-center gap-3 bg-slate-800/80 dark:bg-slate-900/80 p-1.5 sm:p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
-                    <button onclick="toggleDarkMode()" class="p-1.5 rounded-lg hover:bg-slate-700 text-gray-300 hover:text-gold transition" title="מצב לילה/יום">
-                        <i data-lucide="moon" id="darkModeIcon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                    </button>
-                    <div class="w-px h-5 bg-slate-600"></div>
+				<div class="flex items-center gap-2 sm:gap-3 bg-slate-800/80 dark:bg-slate-900/80 p-1.5 sm:p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
+					<button onclick="toggleDarkMode()" class="p-1.5 rounded-lg hover:bg-slate-700 text-gray-300 hover:text-gold transition" title="מצב לילה/יום">
+						<i data-lucide="moon" id="darkModeIcon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+					</button>
 
-					<!-- 
-<span id="liveViewers" class="text-gold text-xs sm:text-sm font-bold flex items-center gap-1 hidden sm:flex">
-    <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-    <span id="viewersCount">טוען...</span> צופים
-</span>
--->
-					<!--      <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+					<!-- כפתור הנגישות החדש והעדין -->
+					<button onclick="toggleA11yMenu()" class="p-1.5 rounded-lg hover:bg-slate-700 text-gray-300 hover:text-gold transition" title="הגדרות נגישות">
+						<i data-lucide="accessibility" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+					</button>
+
+					<div class="w-px h-5 bg-slate-600"></div>
+
+					<!-- אזור הצופים מוסתר כרגע בהערה
+                    <span id="liveViewers" class="text-gold text-xs sm:text-sm font-bold flex items-center gap-1 hidden sm:flex">
+                        <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
                         <span id="viewersCount">טוען...</span> צופים
-                    </span> -->
+                    </span>
                     <div class="w-px h-5 bg-slate-600 hidden sm:block"></div>
-                    
-                    <button id="loginBtn" onclick="toggleLogin()" class="flex items-center gap-1.5 text-xs sm:text-sm font-medium hover:text-gold transition">
+                    -->
+
+					<button id="loginBtn" onclick="toggleLogin()" class="flex items-center gap-1.5 text-xs sm:text-sm font-medium hover:text-gold transition pr-1 sm:pr-0">
                         <i data-lucide="user-circle" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                         <span id="loginText">התחברות</span>
                     </button>
@@ -872,8 +875,8 @@
         </div>
     </div>
 
-	<!-- ==================== תפריט נגישות עצמאי ==================== -->
-	<div id="a11yMenu" class="fixed bottom-24 left-6 sm:bottom-24 sm:left-8 z-[100] hidden flex-col items-start">
+	<!-- ==================== תפריט נגישות עצמאי (נפתח מלמעלה) ==================== -->
+	<div id="a11yMenu" class="fixed top-20 left-4 sm:left-8 z-[100] hidden flex-col items-start">
 		<div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-2xl border-2 border-gold mb-3 w-64 text-right">
 			<div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-slate-700 pb-3">
 				<button onclick="toggleA11yMenu()" class="text-gray-400 hover:text-red-500 transition">
@@ -903,12 +906,8 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- הכפתור הצף לנגישות -->
-	<button onclick="toggleA11yMenu()" class="fixed bottom-24 sm:bottom-8 left-6 sm:left-20 bg-navy-900 dark:bg-slate-800 text-gold p-3 rounded-full shadow-2xl z-40 transition-transform hover:scale-110 flex items-center justify-center border-2 border-gold" style="transform: translateY(-60px);">
-		<i data-lucide="accessibility" class="w-6 h-6"></i>
-	</button>
-    <!-- ==================== JavaScript & Firebase (ES Modules) ==================== -->
+	
+	<!-- ==================== JavaScript & Firebase (ES Modules) ==================== -->
     <script type="module">
         const EXPLORER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=0&single=true&output=csv';
         const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=1693315274&single=true&output=csv';
