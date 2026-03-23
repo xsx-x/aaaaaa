@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>פורום הבית היהודי - בנשיאות הגר"ע פריד</title>
+    <title>פורום הבית היהודי</title>
 		<link rel="icon" type="image/png" href="favicon.png">
     <!-- גופן Assistant -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,80 +31,83 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        body { 
-            background-color: #f8fafc; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .dark body {
-            background-color: #0f172a;
-            color: #f1f5f9;
-        }
+		body {
+		background-color: #f8fafc;
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		-webkit-tap-highlight-color: transparent;
+		}
 
-        /* אנימציות ומעברים */
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .tile-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .tile-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        
-        /* גלילה מותאמת */
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
-        
-        /* רקע עדין */
-        .bg-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' width='80' height='80'%3E%3Cpath fill='%2394a3b8' fill-opacity='0.05' d='M14 16H9v-2h5V9.87a4 4 0 1 1 2 0V14h5v2h-5v15.95A10 10 0 0 0 23.66 27l-3.46-2a8 8 0 0 1-2.2-15.28V16zM66 4H71v2h-5v4.13a4 4 0 1 1-2 0V6h-5V4h5V-1.95A10 10 0 0 0 56.34 3l3.46 2A8 8 0 0 1 64 15.28V4zM40 65a8 8 0 0 1 2.2 15.28V84h5v2h-5v4.13a4 4 0 1 1-2 0V86h-5v-2h5V80.13A10 10 0 0 0 32.34 77l3.46-2A8 8 0 0 1 40 65z'%3E%3C/path%3E%3C/svg%3E");
-            background-size: 320px;
-            background-attachment: fixed;
-        }
+		.dark body {
+		background-color: #0f172a;
+		color: #f1f5f9;
+		}
 
-        /* מודאלים גלאסמורפיזם */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 60; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal.active { display: flex; animation: fadeIn 0.2s; }
-        
-        /* נגן אודיו צף */
-        #floatingAudioPlayer { transition: transform 0.3s ease-in-out; }
-        #floatingAudioPlayer.hidden-player { transform: translateY(150%); }
+		/* אנימציות ומעברים */
+		.tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+		.tab-content.active { display: block; }
+		@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* תפריט מובייל תחתון */
-        .bottom-nav-pb { padding-bottom: 70px; }
-        @media (min-width: 640px) { .bottom-nav-pb { padding-bottom: 0; } }
+		.tile-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+		.tile-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
 
-        mark { background-color: #fef08a; border-radius: 2px; padding: 0 2px; color: #0f172a; }
-        .dark mark { background-color: #854d0e; color: #f8fafc; }
+		/* גלילה מותאמת */
+		.custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+		.custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+		.dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
 
-        /* אנימציית פידבקים (Marquee) */
-        .marquee-wrapper {
-            display: flex;
-            overflow: hidden;
-            user-select: none;
-            gap: 1.5rem;
-            /* אפקט עמעום בצדדים */
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        .marquee-content {
-            flex-shrink: 0;
-            display: flex;
-            justify-content: space-around;
-            gap: 1.5rem;
-            min-width: 100%;
-            animation: scroll-ltr 45s linear infinite;
-        }
-        .marquee-wrapper:hover .marquee-content {
-            animation-play-state: paused;
-        }
-        @keyframes scroll-ltr {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); }
-        }
-    </style>
+		/* רקע עדין */
+		.bg-pattern {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' width='80' height='80'%3E%3Cpath fill='%2394a3b8' fill-opacity='0.05' d='M14 16H9v-2h5V9.87a4 4 0 1 1 2 0V14h5v2h-5v15.95A10 10 0 0 0 23.66 27l-3.46-2a8 8 0 0 1-2.2-15.28V16zM66 4H71v2h-5v4.13a4 4 0 1 1-2 0V6h-5V4h5V-1.95A10 10 0 0 0 56.34 3l3.46 2A8 8 0 0 1 64 15.28V4zM40 65a8 8 0 0 1 2.2 15.28V84h5v2h-5v4.13a4 4 0 1 1-2 0V86h-5v-2h5V80.13A10 10 0 0 0 32.34 77l3.46-2A8 8 0 0 1 40 65z'%3E%3C/path%3E%3C/svg%3E");
+		background-size: 320px;
+		background-attachment: fixed;
+		}
+
+		/* מודאלים גלאסמורפיזם */
+		.modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 60; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+		.modal.active { display: flex; animation: fadeIn 0.2s; }
+
+		/* נגן אודיו צף */
+		#floatingAudioPlayer { transition: transform 0.3s ease-in-out; }
+		#floatingAudioPlayer.hidden-player { transform: translateY(150%); }
+
+		/* תפריט מובייל תחתון */
+		.bottom-nav-pb { padding-bottom: 70px; }
+		@media (min-width: 640px) { .bottom-nav-pb { padding-bottom: 0; } }
+
+		mark { background-color: #fef08a; border-radius: 2px; padding: 0 2px; color: #0f172a; }
+		.dark mark { background-color: #854d0e; color: #f8fafc; }
+
+		/* אנימציית פידבקים (Marquee) */
+		.marquee-wrapper {
+		display: flex;
+		overflow: hidden;
+		user-select: none;
+		gap: 1.5rem;
+		/* אפקט עמעום בצדדים */
+		-webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+		mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+		}
+		.marquee-content {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: space-around;
+		gap: 1.5rem;
+		min-width: 100%;
+		animation: scroll-ltr 45s linear infinite;
+		}
+		.marquee-wrapper:hover .marquee-content {
+		animation-play-state: paused;
+		}
+		@keyframes scroll-ltr {
+		from { transform: translateX(0); }
+		to { transform: translateX(-100%); }
+		}
+		/* הגדרות נגישות עצמאיות */
+		body.a11y-highlight-links a, body.a11y-highlight-links button { text-decoration: underline !important; font-weight: 800 !important; }
+		body.a11y-readable-font * { font-family: Arial, Helvetica, sans-serif !important; letter-spacing: 0.5px !important; }
+	</style>
 </head>
 <body class="text-slate-800 dark:text-slate-200 bg-pattern bottom-nav-pb transition-colors duration-300">
 
@@ -133,9 +136,9 @@
     <span id="viewersCount">טוען...</span> צופים
 </span>
 -->
-                        <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+					<!--      <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
                         <span id="viewersCount">טוען...</span> צופים
-                    </span>
+                    </span> -->
                     <div class="w-px h-5 bg-slate-600 hidden sm:block"></div>
                     
                     <button id="loginBtn" onclick="toggleLogin()" class="flex items-center gap-1.5 text-xs sm:text-sm font-medium hover:text-gold transition">
@@ -733,7 +736,7 @@
             
             <div class="flex items-center gap-4 w-full sm:w-auto">
                 <button onclick="toggleAudioSpeed()" id="audioSpeedBtn" class="text-xs bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold transition w-12 text-center border border-slate-600">x1.0</button>
-				<audio id="mainAudioElement" controls="" class="h-10 w-full max-w-[300px] outline-none"></audio>
+				<audio id="mainAudioElement" controls="" class="h-10 w-full min-w-[200px] sm:min-w-[350px] outline-none flex-grow"></audio>
                 <button onclick="closeAudioPlayer()" class="text-gray-400 hover:text-white bg-slate-800 hover:bg-red-500/20 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
         </div>
@@ -869,6 +872,42 @@
         </div>
     </div>
 
+	<!-- ==================== תפריט נגישות עצמאי ==================== -->
+	<div id="a11yMenu" class="fixed bottom-24 left-6 sm:bottom-24 sm:left-8 z-[100] hidden flex-col items-start">
+		<div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-2xl border-2 border-gold mb-3 w-64 text-right">
+			<div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-slate-700 pb-3">
+				<button onclick="toggleA11yMenu()" class="text-gray-400 hover:text-red-500 transition">
+					<i data-lucide="x" class="w-5 h-5"></i>
+				</button>
+				<h3 class="font-bold text-navy-900 dark:text-white flex items-center gap-2">
+					נגישות <i data-lucide="accessibility" class="w-5 h-5 text-gold"></i>
+				</h3>
+			</div>
+			<div class="space-y-2.5">
+				<button onclick="a11yChangeFontSize(1)" class="w-full bg-gray-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex justify-between items-center">
+					הגדל טקסט <i data-lucide="zoom-in" class="w-4 h-4"></i>
+				</button>
+				<button onclick="a11yChangeFontSize(-1)" class="w-full bg-gray-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex justify-between items-center">
+					הקטן טקסט <i data-lucide="zoom-out" class="w-4 h-4"></i>
+				</button>
+				<button onclick="document.body.classList.toggle('a11y-highlight-links')" class="w-full bg-gray-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex justify-between items-center">
+					הדגשת קישורים <i data-lucide="underline" class="w-4 h-4"></i>
+				</button>
+				<button onclick="document.body.classList.toggle('a11y-readable-font')" class="w-full bg-gray-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex justify-between items-center">
+					גופן קריא <i data-lucide="type" class="w-4 h-4"></i>
+				</button>
+				<div class="w-full h-px bg-gray-200 dark:bg-slate-700 my-2"></div>
+				<button onclick="a11yReset()" class="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 px-4 py-2.5 rounded-xl text-sm font-bold transition flex justify-between items-center">
+					איפוס הגדרות <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- הכפתור הצף לנגישות -->
+	<button onclick="toggleA11yMenu()" class="fixed bottom-24 sm:bottom-8 left-6 sm:left-20 bg-navy-900 dark:bg-slate-800 text-gold p-3 rounded-full shadow-2xl z-40 transition-transform hover:scale-110 flex items-center justify-center border-2 border-gold" style="transform: translateY(-60px);">
+		<i data-lucide="accessibility" class="w-6 h-6"></i>
+	</button>
     <!-- ==================== JavaScript & Firebase (ES Modules) ==================== -->
     <script type="module">
         const EXPLORER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTh_3BthetIL8FCWzNz-pQKQAm3_17p3pV802YHC_KIXlxpa1H2FMKTY9uJpsXrqn9wJG-V4XrLA9lc/pub?gid=0&single=true&output=csv';
@@ -953,56 +992,56 @@
         }
         
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            setTimeout(() => { document.getElementById('darkModeIcon').setAttribute('data-lucide', 'sun'); lucide.createIcons(); }, 100);
+		document.documentElement.classList.add('dark');
+		setTimeout(() => { document.getElementById('darkModeIcon').setAttribute('data-lucide', 'sun'); lucide.createIcons(); }, 100);
+		}
+
+		// ================ מערכת נוכחות אמת (Heartbeat) ================
+		let liveViewersInterval = null;
+		let localViewersData = [];
+		let viewersUnsubscribe = null;
+
+		function setupLiveViewers(uid) {
+		if (!db) return;
+		const liveViewersRef = collection(db, 'artifacts', defaultAppId, 'public', 'data', 'live_viewers');
+		// מזהה המסמך יהיה מזהה המשתמש. כך משתמש שפתח 3 חלונות נספר רק פעם אחת.
+		const myDocRef = doc(liveViewersRef, uid);
+
+		// עדכון חותמת זמן (פעימת חיים)
+		const updatePresence = async () => {
+		try { await setDoc(myDocRef, { lastActive: Date.now() }); }
+		catch (e) { console.warn("Presence update failed", e); }
+		};
+
+		updatePresence();
+		if (liveViewersInterval) clearInterval(liveViewersInterval);
+		liveViewersInterval = setInterval(updatePresence, 30000); // שידור מחדש כל חצי דקה
+
+		// כשיוצאים מהדף, מנסים למחוק
+		window.addEventListener('beforeunload', () => {
+		deleteDoc(myDocRef).catch(()=>{});
+		});
+
+		// האזנה לכל הצופים החיים באוסף
+		if(viewersUnsubscribe) viewersUnsubscribe();
+		viewersUnsubscribe = onSnapshot(liveViewersRef, (snapshot) => {
+		localViewersData = [];
+		snapshot.forEach(d => localViewersData.push(d.data()));
+		renderLiveViewersCount();
+		}, (err) => console.error("Live viewers fetch error:", err));
+		}
+
+		function renderLiveViewersCount() {
+		// מוסתר זמנית
+		/*
+		const now = Date.now();
+		const activeCount = localViewersData.filter(v => now - v.lastActive < 60000).length;
+            if(document.getElementById('viewersCount')) document.getElementById('viewersCount').innerText = activeCount > 0 ? activeCount : 1;
+            if(document.getElementById('liveViewers')) document.getElementById('liveViewers').classList.remove('hidden');
+            */
         }
 
-        // ================ מערכת נוכחות אמת (Heartbeat) ================
-        let liveViewersInterval = null;
-        let localViewersData = [];
-        let viewersUnsubscribe = null;
-
-        function setupLiveViewers(uid) {
-            if (!db) return;
-            const liveViewersRef = collection(db, 'artifacts', defaultAppId, 'public', 'data', 'live_viewers');
-            // מזהה המסמך יהיה מזהה המשתמש. כך משתמש שפתח 3 חלונות נספר רק פעם אחת.
-            const myDocRef = doc(liveViewersRef, uid);
-
-            // עדכון חותמת זמן (פעימת חיים)
-            const updatePresence = async () => {
-                try { await setDoc(myDocRef, { lastActive: Date.now() }); } 
-                catch (e) { console.warn("Presence update failed", e); }
-            };
-            
-            updatePresence();
-            if (liveViewersInterval) clearInterval(liveViewersInterval);
-            liveViewersInterval = setInterval(updatePresence, 30000); // שידור מחדש כל חצי דקה
-
-            // כשיוצאים מהדף, מנסים למחוק
-            window.addEventListener('beforeunload', () => {
-                deleteDoc(myDocRef).catch(()=>{});
-            });
-
-            // האזנה לכל הצופים החיים באוסף
-            if(viewersUnsubscribe) viewersUnsubscribe();
-            viewersUnsubscribe = onSnapshot(liveViewersRef, (snapshot) => {
-                localViewersData = [];
-                snapshot.forEach(d => localViewersData.push(d.data()));
-                renderLiveViewersCount();
-            }, (err) => console.error("Live viewers fetch error:", err));
-        }
-
-        function renderLiveViewersCount() {
-            const now = Date.now();
-            // סינון בזיכרון: רק משתמשים שהחותמת שלהם מאוחרת מהדקה האחרונה נחשבים כאונליין
-            const activeCount = localViewersData.filter(v => now - v.lastActive < 60000).length;
-            document.getElementById('viewersCount').innerText = activeCount > 0 ? activeCount : 1;
-            document.getElementById('liveViewers').classList.remove('hidden');
-        }
-
-        // ריענון מקומי כל 15 שניות כדי למחוק מהתצוגה משתמשים שעברה להם הדקה,
-        // גם אם ה-Firebase לא שחרר עדכון חדש.
-        setInterval(renderLiveViewersCount, 15000);
+        // setInterval(renderLiveViewersCount, 15000); // מוסתר זמנית
         // ===============================================================
 
         if(auth) {
@@ -1287,68 +1326,71 @@
 				return;
 				}
 				if (window.isLoggedIn && !window.currentUser?.isAnonymous) {
-                await signOut(auth);
-                showMessage("התנתקת בהצלחה מהמערכת.");
-            } else {
-                document.getElementById('authEmail').value = '';
-                document.getElementById('authPassword').value = '';
-                document.getElementById('authName').value = '';
-                switchAuthMode('login');
-                openModal('authModal');
-            }
-        }
+			await signOut(auth);
+			showMessage("התנתקת בהצלחה מהמערכת.");
+			} else {
+			document.getElementById('authEmail').value = '';
+			document.getElementById('authPassword').value = '';
+			document.getElementById('authName').value = '';
+			switchAuthMode('login');
+			openModal('authModal');
+			}
+			}
 
-        function requireLogin(targetTab) {
-            if (!window.isLoggedIn) {
-                openModal('authModal');
-            } else {
-                switchTab(targetTab);
-            }
-        }
+			function requireLogin(targetTab) {
+			if (!window.isLoggedIn) {
+			openModal('authModal');
+			} else {
+			switchTab(targetTab);
+			}
+			}
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
-            if(id === 'videoModal') document.getElementById('videoIframe').src = ""; 
-        }
+			function openModal(id) { document.getElementById(id).classList.add('active'); }
+			function closeModal(id) {
+			document.getElementById(id).classList.remove('active');
+			if(id === 'videoModal') document.getElementById('videoIframe').src = "";
+			}
 
-        let audioPlaySpeed = 1;
-        function handleFileClick(encLink, encName, isPremiumContent, encType = '', encLecturer = '') {
-            const link = decodeURIComponent(encLink);
-            const name = decodeURIComponent(encName);
-            const type = encType ? decodeURIComponent(encType) : 'וידאו';
-            const lecturer = encLecturer ? decodeURIComponent(encLecturer) : '';
-            
-            // חסימה למנויים בלבד במידה והמשתמש לא מחובר
-            if (isPremiumContent && !window.isPremiumUser) {
-                openModal('premiumModal');
-            } else {
-                saveToHistory({ name, type, link, lecturer });
-                
-                if (type === 'שמע' && (link.includes('.mp3') || link.includes('drive.google.com'))) {
-                    openAudioPlayer(link, name, lecturer);
-                } else {
-                    let embedLink = link;
-                    if(link.includes('drive.google.com/file/d/')) {
-                        const fileId = link.split('/d/')[1].split('/')[0];
-                        embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
-                    }
-                    document.getElementById('videoModalTitle').innerText = name;
-                    document.getElementById('driveBackupLink').href = link;
-                    document.getElementById('videoIframe').src = embedLink;
-                    openModal('videoModal');
-                }
-            }
-        }
+			let audioPlaySpeed = 1;
+			function handleFileClick(encLink, encName, isPremiumContent, encType = '', encLecturer = '') {
+			const link = decodeURIComponent(encLink);
+			const name = decodeURIComponent(encName);
+			const type = encType ? decodeURIComponent(encType) : 'וידאו';
+			const lecturer = encLecturer ? decodeURIComponent(encLecturer) : '';
 
-        function openAudioPlayer(link, name, lecturer) {
-            const playerDiv = document.getElementById('floatingAudioPlayer');
-            const audioEl = document.getElementById('mainAudioElement');
-            
-            let audioSrc = link;
-            if(link.includes('drive.google.com/file/d/')) {
-                const fileId = link.split('/d/')[1].split('/')[0];
-                audioSrc = `https://drive.google.com/uc?export=download&id=${fileId}`;
+			// חסימה למנויים בלבד במידה והמשתמש לא מחובר
+			if (isPremiumContent && !window.isPremiumUser) {
+			openModal('premiumModal');
+			} else {
+			saveToHistory({ name, type, link, lecturer });
+
+			// דרייב לא מאפשרים השמעת שמע בנגן פנימי עקב חסימות אבטחה.
+			// לכן, רק קבצי MP3 ישירים יושמעו בנגן הצף. שמע מדרייב ייפתח בחלון הקופץ.
+			if (type === 'שמע' && link.toLowerCase().endsWith('.mp3')) {
+			openAudioPlayer(link, name, lecturer);
+			} else {
+			let embedLink = link;
+			// המרה לקישור תצוגה מקדימה של דרייב (עובד גם לוידאו וגם לשמע)
+			if(link.includes('drive.google.com/file/d/')) {
+			const fileId = link.split('/d/')[1].split('/')[0];
+			embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
+			}
+			document.getElementById('videoModalTitle').innerText = name;
+			document.getElementById('driveBackupLink').href = link;
+			document.getElementById('videoIframe').src = embedLink;
+			openModal('videoModal');
+			}
+			}
+			}
+
+			function openAudioPlayer(link, name, lecturer) {
+			const playerDiv = document.getElementById('floatingAudioPlayer');
+			const audioEl = document.getElementById('mainAudioElement');
+
+			let audioSrc = link;
+			if(link.includes('drive.google.com/file/d/')) {
+			const fileId = link.split('/d/')[1].split('/')[0];
+			audioSrc = `https://drive.google.com/uc?export=download&id=${fileId}`;
             }
             
             document.getElementById('audioPlayerTitle').innerText = name;
@@ -1963,6 +2005,36 @@
                 if (currentIndex > 0) switchTab(tabsOrder[currentIndex - 1]);
             }
         }
+					// ================= מערכת נגישות עצמאית =================
+        let currentA11yZoom = 100;
+
+        function toggleA11yMenu() {
+            const menu = document.getElementById('a11yMenu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            lucide.createIcons();
+        }
+
+        function a11yChangeFontSize(step) {
+            currentA11yZoom += step * 10;
+            if (currentA11yZoom > 150) currentA11yZoom = 150;
+            if (currentA11yZoom < 80) currentA11yZoom = 80;
+            document.documentElement.style.fontSize = currentA11yZoom + '%';
+        }
+
+        function a11yReset() {
+            currentA11yZoom = 100;
+            document.documentElement.style.fontSize = '100%';
+            document.body.classList.remove('a11y-highlight-links', 'a11y-readable-font');
+            toggleA11yMenu();
+            if(typeof showMessage === "function") showMessage("הגדרות הנגישות אופסו בהצלחה.");
+        }
+
+        // חשיפת הפונקציות ל-HTML בגלל שהקוד בתוך מודול
+        window.toggleA11yMenu = toggleA11yMenu;
+        window.a11yChangeFontSize = a11yChangeFontSize;
+        window.a11yReset = a11yReset;
+        // =======================================================
 
         function initApp() {
     lucide.createIcons();
