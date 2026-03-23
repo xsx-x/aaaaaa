@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>פורום הבית היהודי - בנשיאות הגר"ע פריד</title>
+		<link rel="icon" type="image/png" href="favicon.png">
     <!-- גופן Assistant -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -125,8 +126,13 @@
                         <i data-lucide="moon" id="darkModeIcon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     </button>
                     <div class="w-px h-5 bg-slate-600"></div>
-                    
-                    <span id="liveViewers" class="text-gold text-xs sm:text-sm font-bold flex items-center gap-1 hidden sm:flex">
+
+					<!-- 
+<span id="liveViewers" class="text-gold text-xs sm:text-sm font-bold flex items-center gap-1 hidden sm:flex">
+    <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+    <span id="viewersCount">טוען...</span> צופים
+</span>
+-->
                         <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
                         <span id="viewersCount">טוען...</span> צופים
                     </span>
@@ -277,8 +283,8 @@
                         <div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
                     </div>
                     <div class="mt-8 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-5 rounded-2xl text-sm text-amber-800 dark:text-amber-200 font-medium">
-                        <strong>כללי המרחב:</strong> 1. אין התחייבות לשום דבר. 2. הסילבוס נתון לשינויים. 3. ההרצאות יימסרו בהקלטות. 4. הכל בכפוף לתקנון.
-                    </div>
+						<strong>כללי המרחב:</strong> אין התחייבות, והסילבוס נתון לשינויים.
+					</div>
                 </div>
             </div>
         </div>
@@ -400,7 +406,8 @@
                                 <div>
                                     <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">משוב והוועדה הרוחנית:</h4>
                                     <div class="flex flex-col gap-2">
-                                        <a href="https://www.pulseem.com/pulseem/LinkRedirect.axd?LinkID=260971746&ClientID=359051697" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"><i data-lucide="send" class="w-4 h-4"></i> לשליחת משוב והצעות ייעול</a>
+                                        <a
+										<a href="https://www.pulseem.com/pulseem/LinkRedirect.axd?LinkID=260971746&ClientID=359051697&subject=משוב על השיעור: ${item.name}" target="_blank" ...="" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"><i data-lucide="send" class="w-4 h-4"></i> לשליחת משוב והצעות ייעול</a>
                                         <a href="https://www.pulseem.com/pulseem/LinkRedirect.axd?LinkID=260971747&ClientID=359051697" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4"></i> פנייה לוועדה הרוחנית</a>
                                     </div>
                                 </div>
@@ -726,7 +733,7 @@
             
             <div class="flex items-center gap-4 w-full sm:w-auto">
                 <button onclick="toggleAudioSpeed()" id="audioSpeedBtn" class="text-xs bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold transition w-12 text-center border border-slate-600">x1.0</button>
-                <audio id="mainAudioElement" controls class="h-8 w-full max-w-[250px] outline-none" style="filter: invert(1) hue-rotate(180deg) grayscale(1);"></audio>
+				<audio id="mainAudioElement" controls="" class="h-10 w-full max-w-[300px] outline-none"></audio>
                 <button onclick="closeAudioPlayer()" class="text-gray-400 hover:text-white bg-slate-800 hover:bg-red-500/20 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
         </div>
@@ -753,7 +760,10 @@
             <h3 class="text-2xl font-extrabold text-navy-900 dark:text-white mb-3">תוכן לחברי פרימיום</h3>
             <p class="text-gray-600 dark:text-gray-300 mb-8 font-medium leading-relaxed">השיעור שביקשת זמין לחברי מסלול המנויים בלבד. הצטרפו עכשיו כדי לקבל גישה מלאה לכל השיעורים והסיכומים באתר!</p>
             <div class="space-y-3">
-                <a href="https://forms.google.com" target="_blank" class="flex items-center justify-center gap-2 w-full bg-navy-900 hover:bg-navy-800 dark:bg-gold dark:hover:bg-gold-hover dark:text-navy-900 text-white font-bold py-3.5 rounded-xl transition shadow-md"><i data-lucide="arrow-left-circle" class="w-5 h-5"></i> לפרטים והצטרפות</a>
+
+				<button onclick="closeModal('premiumModal'); switchTab('about');" class="flex items-center justify-center gap-2 w-full bg-navy-900 hover:bg-navy-800 dark:bg-gold dark:hover:bg-gold-hover dark:text-navy-900 text-white font-bold py-3.5 rounded-xl transition shadow-md">
+					<i data-lucide="info" class="w-5 h-5"></i> לפרטים והצטרפות
+				</button>
                 <button onclick="closeModal('premiumModal')" class="block w-full text-gray-500 hover:text-navy-900 dark:hover:text-white font-bold py-2 transition">חזור לאוצר השיעורים</button>
             </div>
         </div>
@@ -999,7 +1009,7 @@
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     // הפעלת מעקב צופים בזמן אמת לכל משתמש מחובר (גם אנונימי)
-                    setupLiveViewers(user.uid);
+                    // setupLiveViewers(user.uid);
                     
                     if (!user.isAnonymous || isCanvas) {
                         window.currentUser = user;
@@ -1102,168 +1112,181 @@
                             ${btnText} <i data-lucide="arrow-left" class="w-4 h-4"></i>
                         </button>
                     </div>`;
-            });
-            lucide.createIcons();
-        }
+				});
+				lucide.createIcons();
+				}
 
-        function updateHistoryView() {
-            const loggedInState = document.getElementById('loggedInState');
-            const notLoggedInState = document.getElementById('notLoggedInState');
-            
-            if (!loggedInState || !notLoggedInState) return;
+				function updateHistoryView() {
+				const loggedInState = document.getElementById('loggedInState');
+				const notLoggedInState = document.getElementById('notLoggedInState');
 
-            if (window.isLoggedIn) {
-                loggedInState.classList.remove('hidden');
-                notLoggedInState.classList.add('hidden');
-            } else {
-                loggedInState.classList.add('hidden');
-                notLoggedInState.classList.remove('hidden');
-            }
-        }
+				if (!loggedInState || !notLoggedInState) return;
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('#mainNavMenu .nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-5 py-2 rounded-lg transition font-semibold text-white hover:bg-slate-700 whitespace-nowrap flex items-center gap-2";
-                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
-                    btn.className = "nav-btn px-5 py-2 rounded-lg transition font-bold bg-gold text-navy-900 shadow-md whitespace-nowrap flex items-center gap-2 scale-105";
-                }
-            });
+				if (window.isLoggedIn) {
+				loggedInState.classList.remove('hidden');
+				notLoggedInState.classList.add('hidden');
+				} else {
+				loggedInState.classList.add('hidden');
+				notLoggedInState.classList.remove('hidden');
+				}
+				}
 
-            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-                btn.classList.remove('text-gold');
-                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
-                    btn.classList.add('text-gold');
-                }
-            });
-            
-            const navMenu = document.getElementById('mainNavMenu');
-            if (tabId === 'home') {
-                navMenu.classList.add('hidden');
-                navMenu.classList.remove('sm:flex');
-            } else {
-                navMenu.classList.remove('hidden');
-                navMenu.classList.add('sm:flex');
-            }
+				function switchTab(tabId, updateUrl = true) {
+				document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
 
-            if(tabId === 'history') updateHistoryView();
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+				// מוודא שהלשונית קיימת, אם לא - מחזיר לראשי
+				const targetTab = document.getElementById(tabId);
+				if(targetTab) {
+				targetTab.classList.add('active');
+				} else {
+				document.getElementById('home').classList.add('active');
+				tabId = 'home';
+				}
 
-        // ================ מערכת אימות (מייל/סיסמה) ================
-        function switchAuthMode(mode) {
-            authMode = mode;
-            const title = document.getElementById('authModalTitle');
-            const submitText = document.getElementById('authSubmitText');
-            const submitIcon = document.getElementById('authSubmitIcon');
-            const nameContainer = document.getElementById('nameFieldContainer');
-            const passContainer = document.getElementById('passwordFieldContainer');
-            const toggleBtn = document.getElementById('authToggleModeBtn');
-            const forgotContainer = document.getElementById('forgotPasswordContainer');
-            const passInput = document.getElementById('authPassword');
-            const errorMsg = document.getElementById('authErrorMsg');
+				document.querySelectorAll('#mainNavMenu .nav-btn').forEach(btn => {
+				btn.className = "nav-btn px-5 py-2 rounded-lg transition font-semibold text-white hover:bg-slate-700 whitespace-nowrap flex items-center gap-2";
+				if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
+				btn.className = "nav-btn px-5 py-2 rounded-lg transition font-bold bg-gold text-navy-900 shadow-md whitespace-nowrap flex items-center gap-2 scale-105";
+				}
+				});
 
-            errorMsg.classList.add('hidden');
+				document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+				btn.classList.remove('text-gold');
+				if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
+				btn.classList.add('text-gold');
+				}
+				});
 
-            if (mode === 'login') {
-                title.innerText = 'התחברות למערכת';
-                submitText.innerText = 'היכנס למערכת';
-                submitIcon.setAttribute('data-lucide', 'log-in');
-                nameContainer.classList.add('hidden');
-                document.getElementById('authName').required = false;
-                passContainer.classList.remove('hidden');
-                passInput.required = true;
-                toggleBtn.innerText = 'אין לך משתמש? לחץ כאן להרשמה';
-                toggleBtn.onclick = () => switchAuthMode('register');
-                forgotContainer.classList.remove('hidden');
-            } else if (mode === 'register') {
-                title.innerText = 'הרשמה חדשה';
-                submitText.innerText = 'צור משתמש';
-                submitIcon.setAttribute('data-lucide', 'user-plus');
-                nameContainer.classList.remove('hidden');
-                document.getElementById('authName').required = true;
-                passContainer.classList.remove('hidden');
-                passInput.required = true;
-                toggleBtn.innerText = 'יש לך כבר משתמש? התחבר כאן';
-                toggleBtn.onclick = () => switchAuthMode('login');
-                forgotContainer.classList.add('hidden');
-            } else if (mode === 'reset') {
-                title.innerText = 'שחזור סיסמה';
-                submitText.innerText = 'שלח קישור לשחזור';
-                submitIcon.setAttribute('data-lucide', 'mail');
-                nameContainer.classList.add('hidden');
-                document.getElementById('authName').required = false;
-                passContainer.classList.add('hidden');
-                passInput.required = false;
-                toggleBtn.innerText = 'חזור להתחברות';
-                toggleBtn.onclick = () => switchAuthMode('login');
-                forgotContainer.classList.add('hidden');
-            }
-            lucide.createIcons();
-        }
+				const navMenu = document.getElementById('mainNavMenu');
+				if (tabId === 'home') {
+				navMenu.classList.add('hidden');
+				navMenu.classList.remove('sm:flex');
+				} else {
+				navMenu.classList.remove('hidden');
+				navMenu.classList.add('sm:flex');
+				}
 
-        function translateAuthError(code) {
-            switch(code) {
-                case 'auth/invalid-email': return 'כתובת האימייל אינה תקינה.';
-                case 'auth/user-disabled': return 'משתמש זה נחסם.';
-                case 'auth/user-not-found': return 'לא נמצא משתמש עם אימייל זה.';
-                case 'auth/wrong-password': return 'הסיסמה שגויה.';
-                case 'auth/email-already-in-use': return 'כתובת האימייל כבר רשומה במערכת.';
-                case 'auth/weak-password': return 'הסיסמה חלשה מדי (לפחות 6 תווים).';
-                case 'auth/invalid-credential': return 'פרטי ההתחברות אינם נכונים.';
-                case 'auth/network-request-failed': return 'שגיאת רשת. בדוק את החיבור שלך.';
-                default: return 'התרחשה שגיאה בהתחברות. נסה שוב.';
-            }
-        }
+				if(tabId === 'history') updateHistoryView();
 
-        async function handleAuthSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const name = document.getElementById('authName').value.trim();
-            const errorMsg = document.getElementById('authErrorMsg');
-            const submitBtn = document.getElementById('authSubmitBtn');
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            errorMsg.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+				// עדכון שורת הכתובת למעלה (בלי לרענן את הדף)
+				if (updateUrl) {
+				history.pushState(null, '', '#' + tabId);
+				}
+				}
 
-            try {
-                if (authMode === 'login') {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    closeModal('authModal');
-                } else if (authMode === 'register') {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    if (name) {
-                        await updateProfile(userCredential.user, { displayName: name });
-                        document.getElementById('loginText').innerText = "שלום, " + name;
-                    }
-                    closeModal('authModal');
-                    showMessage("נרשמת בהצלחה למערכת! מעתה הגישה לשיעורים המיוחדים פתוחה עבורך.");
-                } else if (authMode === 'reset') {
-                    await sendPasswordResetEmail(auth, email);
-                    closeModal('authModal');
-                    showMessage("קישור לשחזור סיסמה נשלח לאימייל שלך.");
-                }
-            } catch (error) {
-                console.error("Auth error", error);
-                errorMsg.innerText = translateAuthError(error.code);
-                errorMsg.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }
+				// ================ מערכת אימות (מייל/סיסמה) ================
+				function switchAuthMode(mode) {
+				authMode = mode;
+				const title = document.getElementById('authModalTitle');
+				const submitText = document.getElementById('authSubmitText');
+				const submitIcon = document.getElementById('authSubmitIcon');
+				const nameContainer = document.getElementById('nameFieldContainer');
+				const passContainer = document.getElementById('passwordFieldContainer');
+				const toggleBtn = document.getElementById('authToggleModeBtn');
+				const forgotContainer = document.getElementById('forgotPasswordContainer');
+				const passInput = document.getElementById('authPassword');
+				const errorMsg = document.getElementById('authErrorMsg');
 
-        async function toggleLogin() {
-            if (!auth) {
-                showMessage('מערכת ההתחברות לא הוגדרה. יש לעדכן את פרטי ה-Firebase בקוד האתר.');
-                return;
-            }
-            if (window.isLoggedIn && !window.currentUser?.isAnonymous) {
+				errorMsg.classList.add('hidden');
+
+				if (mode === 'login') {
+				title.innerText = 'התחברות למערכת';
+				submitText.innerText = 'היכנס למערכת';
+				submitIcon.setAttribute('data-lucide', 'log-in');
+				nameContainer.classList.add('hidden');
+				document.getElementById('authName').required = false;
+				passContainer.classList.remove('hidden');
+				passInput.required = true;
+				toggleBtn.innerText = 'אין לך משתמש? לחץ כאן להרשמה';
+				toggleBtn.onclick = () => switchAuthMode('register');
+				forgotContainer.classList.remove('hidden');
+				} else if (mode === 'register') {
+				title.innerText = 'הרשמה חדשה';
+				submitText.innerText = 'צור משתמש';
+				submitIcon.setAttribute('data-lucide', 'user-plus');
+				nameContainer.classList.remove('hidden');
+				document.getElementById('authName').required = true;
+				passContainer.classList.remove('hidden');
+				passInput.required = true;
+				toggleBtn.innerText = 'יש לך כבר משתמש? התחבר כאן';
+				toggleBtn.onclick = () => switchAuthMode('login');
+				forgotContainer.classList.add('hidden');
+				} else if (mode === 'reset') {
+				title.innerText = 'שחזור סיסמה';
+				submitText.innerText = 'שלח קישור לשחזור';
+				submitIcon.setAttribute('data-lucide', 'mail');
+				nameContainer.classList.add('hidden');
+				document.getElementById('authName').required = false;
+				passContainer.classList.add('hidden');
+				passInput.required = false;
+				toggleBtn.innerText = 'חזור להתחברות';
+				toggleBtn.onclick = () => switchAuthMode('login');
+				forgotContainer.classList.add('hidden');
+				}
+				lucide.createIcons();
+				}
+
+				function translateAuthError(code) {
+				switch(code) {
+				case 'auth/invalid-email': return 'כתובת האימייל אינה תקינה.';
+				case 'auth/user-disabled': return 'משתמש זה נחסם.';
+				case 'auth/user-not-found': return 'לא נמצא משתמש עם אימייל זה.';
+				case 'auth/wrong-password': return 'הסיסמה שגויה.';
+				case 'auth/email-already-in-use': return 'כתובת האימייל כבר רשומה במערכת.';
+				case 'auth/weak-password': return 'הסיסמה חלשה מדי (לפחות 6 תווים).';
+				case 'auth/invalid-credential': return 'פרטי ההתחברות אינם נכונים.';
+				case 'auth/network-request-failed': return 'שגיאת רשת. בדוק את החיבור שלך.';
+				default: return 'התרחשה שגיאה בהתחברות. נסה שוב.';
+				}
+				}
+
+				async function handleAuthSubmit(e) {
+				e.preventDefault();
+				const email = document.getElementById('authEmail').value.trim();
+				const password = document.getElementById('authPassword').value;
+				const name = document.getElementById('authName').value.trim();
+				const errorMsg = document.getElementById('authErrorMsg');
+				const submitBtn = document.getElementById('authSubmitBtn');
+
+				errorMsg.classList.add('hidden');
+				submitBtn.disabled = true;
+				submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+				try {
+				if (authMode === 'login') {
+				await signInWithEmailAndPassword(auth, email, password);
+				closeModal('authModal');
+				} else if (authMode === 'register') {
+				const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+				if (name) {
+				await updateProfile(userCredential.user, { displayName: name });
+				document.getElementById('loginText').innerText = "שלום, " + name;
+				}
+				closeModal('authModal');
+				showMessage("נרשמת בהצלחה למערכת! מעתה הגישה לשיעורים המיוחדים פתוחה עבורך.");
+				} else if (authMode === 'reset') {
+				await sendPasswordResetEmail(auth, email);
+				closeModal('authModal');
+				showMessage("קישור לשחזור סיסמה נשלח לאימייל שלך.");
+				}
+				} catch (error) {
+				console.error("Auth error", error);
+				errorMsg.innerText = translateAuthError(error.code);
+				errorMsg.classList.remove('hidden');
+				} finally {
+				submitBtn.disabled = false;
+				submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+				}
+				}
+
+				async function toggleLogin() {
+				if (!auth) {
+				showMessage('מערכת ההתחברות לא הוגדרה. יש לעדכן את פרטי ה-Firebase בקוד האתר.');
+				return;
+				}
+				if (window.isLoggedIn && !window.currentUser?.isAnonymous) {
                 await signOut(auth);
                 showMessage("התנתקת בהצלחה מהמערכת.");
             } else {
@@ -1791,29 +1814,33 @@
                         const isPremium = ev.access.includes('מנויים') || ev.access.includes('פרימיום') || ev.access.includes('שותפים');
                         const accessBadgeClass = isPremium ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-gold border-amber-200 dark:border-amber-800" : "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800";
                         const accessText = isPremium ? "<i data-lucide='crown' class='w-3 h-3'></i> פרימיום" : "<i data-lucide='unlock' class='w-3 h-3'></i> פתוח לכולם";
-                        const cardStyle = isPremium ? "border-gold border-r-4" : "border-green-400 border-r-4";
-                        
-                        const displayTopic = highlightText(ev.topic, term);
-                        const displayLecturer = highlightText(ev.lecturer, term);
+				const cardStyle = isPremium ? "border-gold border-r-4" : "border-green-400 border-r-4";
 
-                        dayEventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-700 ${cardStyle}">
-                            <span class="font-extrabold text-gold min-w-[50px] text-xl" dir="ltr">${ev.time}</span>
-                            <div class="hidden sm:block w-px h-12 bg-gray-100 dark:bg-slate-700"></div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-lg text-slate-800 dark:text-white flex flex-wrap items-center gap-2 mb-1">
-                                    ${displayTopic}
-                                    <span class="text-[10px] px-2 py-0.5 rounded border shadow-sm flex items-center gap-1 font-bold ${accessBadgeClass}">${accessText}</span>
-                                </h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5"><i data-lucide="user" class="w-4 h-4"></i> ${displayLecturer}</p>
-                            </div>
-                            <span class="border ${badgeColor} text-xs font-bold px-3 py-1.5 rounded-full text-center whitespace-nowrap self-start sm:self-center shadow-sm">${ev.audience}</span>
-                        </div>`;
-                    }
-                });
-                
-                if (hasVisibleEvents) {
-                    count++;
-                    container.innerHTML += `<div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"><div class="bg-navy-900 text-gold px-6 py-4 border-b-4 border-gold"><h3 class="text-xl font-extrabold flex items-center gap-2"><i data-lucide="calendar-check-2" class="w-6 h-6"></i> ${dayData.displayName}</h3></div><div class="p-6 space-y-4 bg-gray-50 dark:bg-slate-900/30">${dayEventsHTML}</div></div>`;
+				const displayTopic = highlightText(ev.topic, term);
+				const displayLecturer = highlightText(ev.lecturer, term);
+
+				dayEventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-700 ${cardStyle}">
+					<span class="font-extrabold text-gold min-w-[50px] text-xl" dir="ltr">${ev.time}</span>
+					<div class="hidden sm:block w-px h-12 bg-gray-100 dark:bg-slate-700"></div>
+					<div class="flex-grow">
+						<h4 class="font-bold text-lg text-slate-800 dark:text-white flex flex-wrap items-center gap-2 mb-1">
+							${displayTopic}
+						</h4>
+						<p class="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+							<i data-lucide="user" class="w-4 h-4"></i> ${displayLecturer}
+						</p>
+					</div>
+					<div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 self-start sm:self-center">
+						<span class="text-[10px] px-2 py-1 rounded border shadow-sm flex items-center gap-1 font-bold ${accessBadgeClass}">${accessText}</span>
+						<span class="border ${badgeColor} text-xs font-bold px-3 py-1.5 rounded-full text-center whitespace-nowrap shadow-sm">${ev.audience}</span>
+					</div>
+				</div>`;
+				}
+				});
+
+				if (hasVisibleEvents) {
+				count++;
+				container.innerHTML += `<div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"><div class="bg-navy-900 text-gold px-6 py-4 border-b-4 border-gold"><h3 class="text-xl font-extrabold flex items-center gap-2"><i data-lucide="calendar-check-2" class="w-6 h-6"></i> ${dayData.displayName}</h3></div><div class="p-6 space-y-4 bg-gray-50 dark:bg-slate-900/30">${dayEventsHTML}</div></div>`;
                 }
             }
             
@@ -1938,21 +1965,31 @@
         }
 
         function initApp() {
-            lucide.createIcons();
-            switchTab('home'); 
-            showSkeletons();
-            fetchExplorerData();
-            fetchScheduleData();
-            fetchArticlesData();
+    lucide.createIcons();
+    
+    // בדיקה האם יש סיומת בקישור (כמו #schedule), ואם לא - פתיחת עמוד ראשי
+    const initialTab = window.location.hash.replace('#', '') || 'home';
+    switchTab(initialTab, false); 
+    
+    showSkeletons();
+    fetchExplorerData();
+    fetchScheduleData();
+    fetchArticlesData();
 
-            const searchInput = document.getElementById('searchInput');
-            const lecturerFilter = document.getElementById('lecturerFilter');
-            const newFilterToggle = document.getElementById('newFilterToggle');
-            
-            if(searchInput) searchInput.addEventListener('input', handleSearch);
-            if(lecturerFilter) lecturerFilter.addEventListener('change', handleSearch);
-            if(newFilterToggle) newFilterToggle.addEventListener('change', handleSearch);
-        }
+    const searchInput = document.getElementById('searchInput');
+    const lecturerFilter = document.getElementById('lecturerFilter');
+    const newFilterToggle = document.getElementById('newFilterToggle');
+    
+    if(searchInput) searchInput.addEventListener('input', handleSearch);
+    if(lecturerFilter) lecturerFilter.addEventListener('change', handleSearch);
+    if(newFilterToggle) newFilterToggle.addEventListener('change', handleSearch);
+
+    // האזנה לכפתורי "אחורה/קדימה" בדפדפן
+    window.addEventListener('hashchange', () => {
+        const hashTab = window.location.hash.replace('#', '') || 'home';
+        switchTab(hashTab, false);
+    });
+}
 
         // הבטחה להפעלה נכונה בסביבת מודול
         if (document.readyState === 'loading') {
@@ -1961,5 +1998,6 @@
             initApp();
         }
     </script>
+	
 </body>
 </html>
