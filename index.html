@@ -278,13 +278,13 @@
                     </div>
                 </div>
                 <div class="w-full lg:w-3/4">
+                    <!-- אזור החיפוש והסינונים -->
                     <div class="mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col md:flex-row gap-4">
                         <div class="relative flex-grow">
                             <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400"><i data-lucide="search" class="w-5 h-5"></i></span>
                             <input type="text" id="scheduleLecturerSearch" oninput="handleScheduleSearch()" placeholder="חיפוש מרצה / רב בלוח..." class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium">
                         </div>
                         
-                        <!-- סינונים חדשים -->
                         <!-- סינונים חדשים ומעוצבים (ללא סמלים) -->
                         <div class="relative w-full md:w-48 group">
                             <select id="scheduleAudienceFilter" onchange="handleScheduleSearch()" class="w-full py-3 pl-10 pr-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 hover:border-gold dark:hover:border-gold focus:ring-2 focus:ring-gold outline-none bg-white dark:bg-slate-800 dark:text-white transition font-bold appearance-none cursor-pointer shadow-sm text-slate-800">
@@ -308,12 +308,15 @@
                                 <i data-lucide="chevron-down" class="w-5 h-5"></i>
                             </div>
                         </div>
+                    </div> <!-- כאן הייתה חסרה תגית הסגירה! -->
+
+                    <!-- אזור הצגת השיעורים -->
                     <div id="scheduleContainer" class="space-y-6">
-						<div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
+                        <div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
                     </div>
                     <div class="mt-8 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-5 rounded-2xl text-sm text-amber-800 dark:text-amber-200 font-medium">
-						<strong>כללי המרחב:</strong> אין התחייבות, והסילבוס נתון לשינויים.
-					</div>
+                        <strong>כללי המרחב:</strong> אין התחייבות, והסילבוס נתון לשינויים.
+                    </div>
                 </div>
             </div>
         </div>
