@@ -278,15 +278,29 @@
                     </div>
                 </div>
                 <div class="w-full lg:w-3/4">
-                    <div class="mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
-                        <div class="relative">
+                    <div class="mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col md:flex-row gap-4">
+                        <div class="relative flex-grow">
                             <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400"><i data-lucide="search" class="w-5 h-5"></i></span>
-                            <input type="text" id="scheduleLecturerSearch" oninput="handleScheduleSearch()" placeholder="חיפוש מרצה / רב בלוח השיעורים..." class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium">
+                            <input type="text" id="scheduleLecturerSearch" oninput="handleScheduleSearch()" placeholder="חיפוש מרצה / רב בלוח..." class="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium">
                         </div>
+                        
+                        <!-- סינונים חדשים -->
+                        <select id="scheduleAudienceFilter" onchange="handleScheduleSearch()" class="w-full md:w-40 py-3 px-4 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium appearance-none cursor-pointer">
+                            <option value="all">כל הקהלים</option>
+                            <option value="זוגי">זוגי</option>
+                            <option value="גברים">גברים</option>
+                            <option value="נשים">נשים</option>
+                        </select>
+
+                        <select id="scheduleAccessFilter" onchange="handleScheduleSearch()" class="w-full md:w-48 py-3 px-4 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium appearance-none cursor-pointer">
+                            <option value="all">כל סוגי הגישה</option>
+                            <option value="פתוח">פתוח לכולם</option>
+                            <option value="מנויים">למנויים בלבד</option>
+                        </select>
                     </div>
 
                     <div id="scheduleContainer" class="space-y-6">
-                        <div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
+						<div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
                     </div>
                     <div class="mt-8 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-5 rounded-2xl text-sm text-amber-800 dark:text-amber-200 font-medium">
 						<strong>כללי המרחב:</strong> אין התחייבות, והסילבוס נתון לשינויים.
@@ -1804,8 +1818,7 @@
 
         function filterSchedule(monthFilter) {
             window.currentScheduleMonthFilter = monthFilter;
-            const searchTerm = document.getElementById('scheduleLecturerSearch').value;
-            renderScheduleCards(monthFilter, searchTerm);
+            handleScheduleSearch(); // יקרא ל-render עם כל הסינונים
             
             const buttons = document.getElementById('monthFilterContainer').querySelectorAll('button');
             buttons.forEach(b => {
@@ -1819,10 +1832,13 @@
 
         function handleScheduleSearch() {
             const searchTerm = document.getElementById('scheduleLecturerSearch').value;
-            renderScheduleCards(window.currentScheduleMonthFilter, searchTerm);
+            const audienceFilter = document.getElementById('scheduleAudienceFilter').value;
+            const accessFilter = document.getElementById('scheduleAccessFilter').value;
+            
+            renderScheduleCards(window.currentScheduleMonthFilter, searchTerm, audienceFilter, accessFilter);
         }
 
-        function renderScheduleCards(filterByMonth, searchTerm = '') {
+        function renderScheduleCards(filterByMonth, searchTerm = '', audienceFilter = 'all', accessFilter = 'all') {
             const container = document.getElementById('scheduleContainer');
             container.innerHTML = '';
             let count = 0;
@@ -1835,13 +1851,24 @@
                 let hasVisibleEvents = false;
 
                 dayData.events.forEach(ev => {
-                    if (term && (!ev.lecturer || !ev.lecturer.toLowerCase().includes(term))) {
+                    // סינון חיפוש טקסט (מרצה או שיעור)
+                    if (term && (!ev.lecturer || !ev.lecturer.toLowerCase().includes(term)) && (!ev.topic || !ev.topic.toLowerCase().includes(term))) {
                         return; 
                     }
 
+                    // סינון קהל יעד
+                    if (audienceFilter !== 'all' && ev.audience !== audienceFilter) {
+                         if (!ev.topic.includes('הפסקה')) return; // לא מסננים הפסקות לפי קהל
+                    }
+
+                    // סינון גישה (פתוח/מנויים)
+                    const isPremium = ev.access.includes('מנויים') || ev.access.includes('פרימיום') || ev.access.includes('שותפים');
+                    if (accessFilter === 'פתוח' && isPremium) return;
+                    if (accessFilter === 'מנויים' && !isPremium) return;
+
                     const safeTopic = ev.topic || "";
                     if(safeTopic.includes('הפסקה')) {
-                        if(!term) {
+                        if(!term && audienceFilter === 'all' && accessFilter === 'all') { // מראה הפסקה רק אם לא סיננו ספציפית
                             dayEventsHTML += `<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-dashed border-gray-300 dark:border-slate-700 opacity-80"><span class="font-bold text-gray-500 dark:text-gray-400 min-w-[50px] text-left" dir="ltr">${ev.time}</span><div class="w-px h-6 bg-gray-300 dark:bg-slate-600"></div><span class="font-bold text-gray-500 dark:text-gray-400 flex-grow text-center flex justify-center items-center gap-2"><i data-lucide="coffee" class="w-5 h-5"></i> הפסקה</span></div>`;
                             hasVisibleEvents = true;
                         }
@@ -1852,45 +1879,43 @@
                         if(ev.audience === "נשים") badgeColor = "bg-pink-100 dark:bg-pink-900/40 text-pink-800 dark:text-pink-300 border-pink-200 dark:border-pink-800/50";
                         if(ev.audience === "גברים") badgeColor = "bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800/50";
                         
-                        const isPremium = ev.access.includes('מנויים') || ev.access.includes('פרימיום') || ev.access.includes('שותפים');
                         const accessBadgeClass = isPremium ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-gold border-amber-200 dark:border-amber-800" : "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800";
                         const accessText = isPremium ? "<i data-lucide='crown' class='w-3 h-3'></i> פרימיום" : "<i data-lucide='unlock' class='w-3 h-3'></i> פתוח לכולם";
-				const cardStyle = isPremium ? "border-gold border-r-4" : "border-green-400 border-r-4";
+                        const cardStyle = isPremium ? "border-gold border-r-4" : "border-green-400 border-r-4";
 
-				const displayTopic = highlightText(ev.topic, term);
-				const displayLecturer = highlightText(ev.lecturer, term);
+                        const displayTopic = highlightText(ev.topic, term);
+                        const displayLecturer = highlightText(ev.lecturer, term);
 
-				dayEventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-700 ${cardStyle}">
-					<span class="font-extrabold text-gold min-w-[50px] text-xl" dir="ltr">${ev.time}</span>
-					<div class="hidden sm:block w-px h-12 bg-gray-100 dark:bg-slate-700"></div>
-					<div class="flex-grow">
-						<h4 class="font-bold text-lg text-slate-800 dark:text-white flex flex-wrap items-center gap-2 mb-1">
-							${displayTopic}
-						</h4>
-						<p class="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-							<i data-lucide="user" class="w-4 h-4"></i> ${displayLecturer}
-						</p>
-					</div>
-					<div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 self-start sm:self-center">
-						<span class="text-[10px] px-2 py-1 rounded border shadow-sm flex items-center gap-1 font-bold ${accessBadgeClass}">${accessText}</span>
-						<span class="border ${badgeColor} text-xs font-bold px-3 py-1.5 rounded-full text-center whitespace-nowrap shadow-sm">${ev.audience}</span>
-					</div>
-				</div>`;
-				}
-				});
+                        dayEventsHTML += `<div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-slate-700 ${cardStyle}">
+                            <span class="font-extrabold text-gold min-w-[50px] text-xl" dir="ltr">${ev.time}</span>
+                            <div class="hidden sm:block w-px h-12 bg-gray-100 dark:bg-slate-700"></div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-lg text-slate-800 dark:text-white flex flex-wrap items-center gap-2 mb-1">
+                                    ${displayTopic}
+                                </h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                                    <i data-lucide="user" class="w-4 h-4"></i> ${displayLecturer}
+                                </p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 self-start sm:self-center">
+                                <span class="text-[10px] px-2 py-1 rounded border shadow-sm flex items-center gap-1 font-bold ${accessBadgeClass}">${accessText}</span>
+                                <span class="border ${badgeColor} text-xs font-bold px-3 py-1.5 rounded-full text-center whitespace-nowrap shadow-sm">${ev.audience}</span>
+                            </div>
+                        </div>`;
+                    }
+                });
 
-				if (hasVisibleEvents) {
-				count++;
-				container.innerHTML += `<div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"><div class="bg-navy-900 text-gold px-6 py-4 border-b-4 border-gold"><h3 class="text-xl font-extrabold flex items-center gap-2"><i data-lucide="calendar-check-2" class="w-6 h-6"></i> ${dayData.displayName}</h3></div><div class="p-6 space-y-4 bg-gray-50 dark:bg-slate-900/30">${dayEventsHTML}</div></div>`;
+                if (hasVisibleEvents) {
+                    count++;
+                    container.innerHTML += `<div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"><div class="bg-navy-900 text-gold px-6 py-4 border-b-4 border-gold"><h3 class="text-xl font-extrabold flex items-center gap-2"><i data-lucide="calendar-check-2" class="w-6 h-6"></i> ${dayData.displayName}</h3></div><div class="p-6 space-y-4 bg-gray-50 dark:bg-slate-900/30">${dayEventsHTML}</div></div>`;
                 }
             }
             
             if (count === 0) {
-                container.innerHTML = '<div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>לא נמצאו שיעורים תואמים לחיפוש.</div>';
+                container.innerHTML = '<div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>לא נמצאו שיעורים תואמים לסינון.</div>';
             }
             lucide.createIcons();
         }
-
         async function fetchArticlesData() {
             if(ARTICLES_CSV_URL.includes('הכנס_את_המספר_כאן')) {
                 document.getElementById('articlesContainer').innerHTML = '<div class="col-span-full py-16 text-center text-gray-400 font-medium text-lg">יש להגדיר בקוד האתר את הקישור לגיליון המאמרים.</div>';
