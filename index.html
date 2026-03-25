@@ -285,20 +285,29 @@
                         </div>
                         
                         <!-- סינונים חדשים -->
-                        <select id="scheduleAudienceFilter" onchange="handleScheduleSearch()" class="w-full md:w-40 py-3 px-4 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium appearance-none cursor-pointer">
-                            <option value="all">כל הקהלים</option>
-                            <option value="זוגי">זוגי</option>
-                            <option value="גברים">גברים</option>
-                            <option value="נשים">נשים</option>
-                        </select>
+                        <!-- סינונים חדשים ומעוצבים (ללא סמלים) -->
+                        <div class="relative w-full md:w-48 group">
+                            <select id="scheduleAudienceFilter" onchange="handleScheduleSearch()" class="w-full py-3 pl-10 pr-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 hover:border-gold dark:hover:border-gold focus:ring-2 focus:ring-gold outline-none bg-white dark:bg-slate-800 dark:text-white transition font-bold appearance-none cursor-pointer shadow-sm text-slate-800">
+                                <option value="all">כל הקהלים</option>
+                                <option value="זוגי">זוגי</option>
+                                <option value="גברים">גברים</option>
+                                <option value="נשים">נשים</option>
+                            </select>
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-hover:text-gold transition">
+                                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                            </div>
+                        </div>
 
-                        <select id="scheduleAccessFilter" onchange="handleScheduleSearch()" class="w-full md:w-48 py-3 px-4 rounded-xl border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-gold outline-none bg-gray-50 dark:bg-slate-900 dark:text-white transition font-medium appearance-none cursor-pointer">
-                            <option value="all">כל סוגי הגישה</option>
-                            <option value="פתוח">פתוח לכולם</option>
-                            <option value="מנויים">למנויים בלבד</option>
-                        </select>
-                    </div>
-
+                        <div class="relative w-full md:w-56 group">
+                            <select id="scheduleAccessFilter" onchange="handleScheduleSearch()" class="w-full py-3 pl-10 pr-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 hover:border-gold dark:hover:border-gold focus:ring-2 focus:ring-gold outline-none bg-white dark:bg-slate-800 dark:text-white transition font-bold appearance-none cursor-pointer shadow-sm text-slate-800">
+                                <option value="all">כל סוגי הגישה</option>
+                                <option value="פתוח">פתוח לכולם</option>
+                                <option value="מנויים">למנויים בלבד</option>
+                            </select>
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-hover:text-gold transition">
+                                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                            </div>
+                        </div>
                     <div id="scheduleContainer" class="space-y-6">
 						<div class="text-center py-16 text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-gold"></i>טוען את לוח השיעורים...</div>
                     </div>
